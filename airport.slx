@@ -1,0 +1,147 @@
+//*****************************************************************************
+//	
+//*****************************************************************************
+
+module airport {
+	
+	class Flight {
+		int flight_priority, kill_runway;
+		float flight_arrival_time, flight_landing_time;
+	};
+
+	set(Flight) ranked(descending flight_priority) flight_queue;
+
+	rn_stream emergency, international, domestic, recreational, landing;
+
+	constant float shutdown_time = 7 * 24 * 60; // One week (in minutes)
+
+	control int shutdown = 0;
+	
+	int num_runways = 3;
+	int incr1 = 0;
+
+	procedure main() {
+		
+		pointer(puck) e_fork, i_fork, d_fork, r_fork;
+		
+		pointer(Flight) flight;
+
+		e_fork = fork priority 1{
+			forever {
+				advance rv_uniform(emergency, 6.0 * 60.0, 12.0 * 60.0);
+				flight = new Flight;
+				flight -> flight_arrival_time = time;
+				flight -> flight_priority = 10;
+				flight -> flight_landing_time = rv_uniform(landing, 5.0, 15.0);
+
+				place flight into flight_queue;
+				if (time >= shutdown_time)
+					terminate;
+			}
+		}
+		
+		i_fork = fork priority 1{
+			forever {
+				advance rv_uniform(international, 30.0, 60.0);
+			
+				flight = new Flight;
+				flight -> flight_arrival_time = time;
+				flight -> flight_priority = 9;
+				flight -> flight_landing_time = rv_uniform(landing, 10.0, 15.0);
+
+				place flight into flight_queue;
+				if (time >= shutdown_time)
+					terminate;
+			}
+		}
+		
+		d_fork = fork priority 1{
+			forever {
+				advance rv_uniform(domestic, 15.0, 30.0);
+			
+				flight = new Flight;
+				flight -> flight_arrival_time = time;
+				flight -> flight_priority = 8;
+				flight -> flight_landing_time = rv_uniform(landing, 5.0, 10.0);
+
+				place flight into flight_queue;
+				if (time >= shutdown_time)
+					terminate;
+			}
+		}
+		
+		r_fork = fork priority 1{
+			forever {
+				advance rv_uniform(recreational, 2.0 * 60.0, 4.0 * 60.0);
+				
+				flight = new Flight;
+				flight -> flight_arrival_time = time;
+				flight -> flight_priority = 7;
+				flight -> flight_landing_time = rv_uniform(landing, 15.0, 20.0);
+				
+				place flight into flight_queue;
+				if (time >= shutdown_time)
+					terminate;
+			}
+		}
+		
+		fork priority 1{
+			wait until (time > shutdown_time);
+			for(incr1 = 0; incr1 <= num_runways; incr1++) {
+				flight = new Flight;
+				flight -> flight_priority = 2;
+				flight -> kill_runway = 1;
+				place flight into flight_queue;
+			}
+			terminate;
+		}
+		for(incr1 = 0; incr1 <= num_runways; incr1++) {
+			activate new runway();
+		}
+		wait until (shutdown == num_runways);
+
+	}	// End of main
+
+	class runway() {
+
+		float total_queueing_time, total_landing_time;
+		int flights_landed = 0;
+
+		pointer(Flight) flight;
+
+		actions {
+			
+			forever {
+				
+				wait until (flight_queue.size > 0);
+				flight = first Flight in flight_queue;
+				
+				if(flight -> kill_runway < 1) {
+					
+					remove flight from flight_queue;
+					total_queueing_time += time - flight -> flight_arrival_time;
+					total_landing_time -= time;
+					advance flight -> flight_landing_time;
+					total_landing_time += time;
+					++flights_landed;	// count jobs out
+					destroy flight;
+					
+				} else {
+					
+					remove flight from flight_queue;
+					print (time, flights_landed, total_landing_time / time, total_queueing_time / flights_landed * 60)
+
+						"Time _.__\n\n"
+						"Flights Landed: _____|\n"
+						"Runway Utilization: _.___|\n\n"
+						"Mean Queueing Time/Flight: _.__ seconds\n\n";
+
+					destroy flight;
+					shutdown += 1;
+					terminate;
+				}
+			}
+		}
+	}
+
+}
