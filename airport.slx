@@ -18,7 +18,6 @@ module airport {
 
 	set(Flight) ranked(descending flight_priority) flight_queue;
 	rn_stream emergency, international, domestic, recreational, landing;
-	random_variable TimeInQueue histogram start=0.5 width=0.5 count=120;
 	constant float shutdown_time = 365 * 24 * 60; // One year (in minutes)
 	control int shutdown = 0;
 	
@@ -66,7 +65,7 @@ module airport {
 		
 		i_fork = fork priority 1 {
 			forever {
-				launch(international, 9, 5.0, 10.0, 10.0, 15.0);
+				launch(international, 9, 5.0, 10.0, 5.0, 12.0);
 				if (time >= shutdown_time)
 					terminate;
 			}
@@ -74,7 +73,7 @@ module airport {
 		
 		d_fork = fork priority 1 {
 			forever {
-				launch(domestic, 8, 5.0, 10.0, 10.0, 15.0);
+				launch(domestic, 8, 5.0, 10.0, 5.0, 9.0);
 				if (time >= shutdown_time)
 					terminate;
 			}
@@ -82,7 +81,7 @@ module airport {
 		
 		r_fork = fork priority 1 {
 			forever {
-				launch(recreational, 7, 60.0, 120.0, 15.0, 20.0);
+				launch(recreational, 7, 4 * 60.0, 8 * 60.0, 15.0, 20.0);
 				if (time >= shutdown_time)
 					terminate;
 			}
@@ -90,7 +89,7 @@ module airport {
 		
 		fork priority 1{
 			wait until (time > shutdown_time);
-			for(incr1 = 0; incr1 <= num_runways; incr1++) {
+			for(incr1 = 1; incr1 <= num_runways; incr1++) {
 				flight = new Flight;
 				flight -> flight_priority = 2;
 				flight -> kill_runway = 1;
@@ -99,16 +98,10 @@ module airport {
 			terminate;
 		}
 		for(incr1 = 1; incr1 <= num_runways; incr1++) {
-			activate new runway(incr1 + 1);
+			activate new runway(incr1);
 		}
 		
 		wait until (shutdown == num_runways);
-		
-		h = TimeInQueue.histo;
-		for (incr1 = 0; incr1 < h -> class_count; incr1++) {
-			write file=timeinq (h -> lower_bound + incr1 * h -> class_width, 100.0 * h -> frequency[incr1] / h -> count)
-				"__.__,__.__\n";
-		}
 		
 		PA_End;
 
@@ -119,13 +112,15 @@ module airport {
 		float total_queueing_time, total_landing_time;
 		int flights_landed = 0;
 		int id = runway_id;
-		//string(7) runway_name = {"R", "U", "N", "W", "A", "Y", runway_id};
+		string(10) str_id;
+		string(7) runway_name = "RUNWAY";
 
 		pointer(Flight) flight;
 
 		actions {
-			
-			//print(runway_name)"_______\n";
+
+			runway_name = runway_name cat ascii(id + 48);
+			print(runway_name)"_______\n";
 			
 			forever {
 				
@@ -136,7 +131,6 @@ module airport {
 					
 					remove flight from flight_queue;
 					total_queueing_time += time - flight -> flight_arrival_time;
-					tabulate TimeInQueue = time - flight -> flight_arrival_time;
 					
 					PA_Place	flight -> id on "CHAIN";		// place on the chain
 					
