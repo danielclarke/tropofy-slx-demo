@@ -98,8 +98,8 @@ module airport {
 			}
 			terminate;
 		}
-		for(incr1 = 0; incr1 <= num_runways; incr1++) {
-			activate new runway();
+		for(incr1 = 1; incr1 <= num_runways; incr1++) {
+			activate new runway(incr1 + 1);
 		}
 		
 		wait until (shutdown == num_runways);
@@ -114,14 +114,18 @@ module airport {
 
 	}	// End of main
 
-	class runway() {
+	class runway(int runway_id) {
 
 		float total_queueing_time, total_landing_time;
 		int flights_landed = 0;
+		int id = runway_id;
+		//string(7) runway_name = {"R", "U", "N", "W", "A", "Y", runway_id};
 
 		pointer(Flight) flight;
 
 		actions {
+			
+			//print(runway_name)"_______\n";
 			
 			forever {
 				
