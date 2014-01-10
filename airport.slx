@@ -2,84 +2,87 @@
 //	
 //*****************************************************************************
 
+import <stats.slx>
+import <h7>
+import <proof4>
+
 module airport {
 	
 	class Flight {
 		int flight_priority, kill_runway;
+		int id;
 		float flight_arrival_time, flight_landing_time;
 	};
 
+  int ID = 1;
+
 	set(Flight) ranked(descending flight_priority) flight_queue;
-
 	rn_stream emergency, international, domestic, recreational, landing;
-
-	constant float shutdown_time = 7 * 24 * 60; // One week (in minutes)
-
+	random_variable TimeInQueue histogram start=0.5 width=0.5 count=120;
+	constant float shutdown_time = 365 * 24 * 60; // One year (in minutes)
 	control int shutdown = 0;
+	
+	facility conch;
 	
 	int num_runways = 3;
 	int incr1 = 0;
 
+	procedure launch(rn_stream s, int p, float f_n, float f_x, float l_n, float l_x) {
+		advance rv_uniform(s, f_n, f_x);
+		pointer(Flight) flight;
+		flight = new Flight;
+		flight -> flight_arrival_time = time;
+		flight -> flight_priority = p;
+		flight -> flight_landing_time = rv_uniform(landing, l_n, l_x);
+
+		place flight into flight_queue;
+		
+		seize conch;
+		flight -> id = ID++;
+		release conch;
+		
+		PA_Create	"Car" flight -> id;				// create Proof object
+		PA_Place	flight -> id on "ENTRY";		// place on entry path
+	}
+
 	procedure main() {
+		
+		filedef timeinq output name = "timeinQ.lis";
+		pointer(histogram) h;
+		
+		PA_ATF "CARWASH.atf";	// animation trace file (atf)
 		
 		pointer(puck) e_fork, i_fork, d_fork, r_fork;
 		
 		pointer(Flight) flight;
 
-		e_fork = fork priority 1{
+		e_fork = fork priority 1 {
 			forever {
-				advance rv_uniform(emergency, 6.0 * 60.0, 12.0 * 60.0);
-				flight = new Flight;
-				flight -> flight_arrival_time = time;
-				flight -> flight_priority = 10;
-				flight -> flight_landing_time = rv_uniform(landing, 5.0, 15.0);
-
-				place flight into flight_queue;
+				launch(emergency, 10, 12.0 * 60.0, 24.0 * 60.0, 15.0, 30.0);
 				if (time >= shutdown_time)
 					terminate;
 			}
 		}
 		
-		i_fork = fork priority 1{
+		i_fork = fork priority 1 {
 			forever {
-				advance rv_uniform(international, 30.0, 60.0);
-			
-				flight = new Flight;
-				flight -> flight_arrival_time = time;
-				flight -> flight_priority = 9;
-				flight -> flight_landing_time = rv_uniform(landing, 10.0, 15.0);
-
-				place flight into flight_queue;
+				launch(international, 9, 5.0, 10.0, 10.0, 15.0);
 				if (time >= shutdown_time)
 					terminate;
 			}
 		}
 		
-		d_fork = fork priority 1{
+		d_fork = fork priority 1 {
 			forever {
-				advance rv_uniform(domestic, 15.0, 30.0);
-			
-				flight = new Flight;
-				flight -> flight_arrival_time = time;
-				flight -> flight_priority = 8;
-				flight -> flight_landing_time = rv_uniform(landing, 5.0, 10.0);
-
-				place flight into flight_queue;
+				launch(domestic, 8, 5.0, 10.0, 10.0, 15.0);
 				if (time >= shutdown_time)
 					terminate;
 			}
 		}
 		
-		r_fork = fork priority 1{
+		r_fork = fork priority 1 {
 			forever {
-				advance rv_uniform(recreational, 2.0 * 60.0, 4.0 * 60.0);
-				
-				flight = new Flight;
-				flight -> flight_arrival_time = time;
-				flight -> flight_priority = 7;
-				flight -> flight_landing_time = rv_uniform(landing, 15.0, 20.0);
-				
-				place flight into flight_queue;
+				launch(recreational, 7, 60.0, 120.0, 15.0, 20.0);
 				if (time >= shutdown_time)
 					terminate;
 			}
@@ -98,7 +101,16 @@ module airport {
 		for(incr1 = 0; incr1 <= num_runways; incr1++) {
 			activate new runway();
 		}
+		
 		wait until (shutdown == num_runways);
+		
+		h = TimeInQueue.histo;
+		for (incr1 = 0; incr1 < h -> class_count; incr1++) {
+			write file=timeinq (h -> lower_bound + incr1 * h -> class_width, 100.0 * h -> frequency[incr1] / h -> count)
+				"__.__,__.__\n";
+		}
+		
+		PA_End;
 
 	}	// End of main
 
@@ -120,21 +132,30 @@ module airport {
 					
 					remove flight from flight_queue;
 					total_queueing_time += time - flight -> flight_arrival_time;
+					tabulate TimeInQueue = time - flight -> flight_arrival_time;
+					
+					PA_Place	flight -> id on "CHAIN";		// place on the chain
+					
 					total_landing_time -= time;
 					advance flight -> flight_landing_time;
-					total_landing_time += time;
+					total_landing_time += time; 
 					++flights_landed;	// count jobs out
+					
+					PA_Place	flight -> id on "EXIT";			// place on the exit path
+					
+					PA_Destroy flight -> id;						// destroy Proof object
 					destroy flight;
 					
 				} else {
 					
 					remove flight from flight_queue;
-					print (time, flights_landed, total_landing_time / time, total_queueing_time / flights_landed * 60)
+					print (time, flights_landed, total_landing_time / time, total_queueing_time / flights_landed * 60, ID)
 
-						"Time _.__\n\n"
-						"Flights Landed: _____|\n"
-						"Runway Utilization: _.___|\n\n"
-						"Mean Queueing Time/Flight: _.__ seconds\n\n";
+						"Time _.__"
+						"Flights Landed: _____|"
+						"Runway Utilization: _.___|"
+						"Mean Queueing Time/Flight: _.__ minutes"
+						"ID: _\n\n";
 
 					destroy flight;
 					shutdown += 1;
