@@ -4,7 +4,7 @@
 
 import <stats.slx>
 import <h7>
-import <proof4>
+import <proof3d>
 
 module airport {
 	
@@ -14,12 +14,12 @@ module airport {
 		float flight_arrival_time, flight_landing_time;
 	};
 
-  int ID = 1;
+  int ID = 2;
 	float TIME_SCALE = 0.1;
 
 	set(Flight) ranked(descending flight_priority) flight_queue;
 	rn_stream emergency, international, domestic, recreational, landing;
-	constant float shutdown_time = 7.0 * 24.0 * 6.0; // One week (in tens of minutes)
+	constant float shutdown_time = 24.0 * 6.0; // One day (in tens of minutes)
 	control int shutdown = 0;
 	
 	facility conch;
@@ -41,13 +41,13 @@ module airport {
 		flight -> id = ID++;
 		release conch;
 		
-		PA_Create	pa_flight_type flight -> id;				// create Proof object
-		PA_Place	flight -> id on "AIRSPACE";		// place on entry path
+		PA_Create pa_flight_type flight -> id;				// create Proof object
+		PA_Place flight -> id on "AIRSPACE";		// place on entry path
 	}
 
 	procedure main() {
 		
-		PA_ATF "CARWASH.atf";	// animation trace file (atf)
+		PA_ATF "AIRPORT.ATF";	// animation trace file (atf)
 		
 		pointer(puck) e_fork, i_fork, d_fork, r_fork;
 		
@@ -55,7 +55,7 @@ module airport {
 
 		e_fork = fork priority 1 {
 			forever {
-				launch(emergency, "EmergencyFlight", 10, 12.0 * 60.0, 24.0 * 60.0, 15.0, 30.0);
+				launch(emergency, "EmergencyFlight", 10, 60.0, 2 * 60.0, 15.0, 30.0);
 				if (time >= shutdown_time)
 					terminate;
 			}
@@ -63,7 +63,7 @@ module airport {
 		
 		i_fork = fork priority 1 {
 			forever {
-				launch(international, "InternationalFlight", 9, 3.0, 7.0, 5.0, 12.0);
+				launch(international, "InternationalFlight", 9, 10.0, 15.0, 5.0, 12.0);
 				if (time >= shutdown_time)
 					terminate;
 			}
@@ -71,7 +71,7 @@ module airport {
 		
 		d_fork = fork priority 1 {
 			forever {
-				launch(domestic, "DomesticFlight", 8, 3.0, 7.0, 5.0, 9.0);
+				launch(domestic, "DomesticFlight", 8, 5.0, 10.0, 4.0, 6.0);
 				if (time >= shutdown_time)
 					terminate;
 			}
@@ -79,7 +79,7 @@ module airport {
 		
 		r_fork = fork priority 1 {
 			forever {
-				launch(recreational, "RecreationalFlight", 7, 4 * 60.0, 8 * 60.0, 15.0, 20.0);
+				launch(recreational, "RecreationalFlight", 7, 30.0, 60.0, 15.0, 20.0);
 				if (time >= shutdown_time)
 					terminate;
 			}
@@ -129,14 +129,14 @@ module airport {
 					remove flight from flight_queue;
 					total_queueing_time += time - flight -> flight_arrival_time;
 					
-					PA_Place	flight -> id on runway_name;
+					PA_Place flight -> id on runway_name;
 					
 					total_landing_time -= time;
 					advance flight -> flight_landing_time;
 					total_landing_time += time; 
 					++flights_landed;	// count jobs out
 					
-					PA_Place	flight -> id on "EXIT";			// place on the exit path
+					PA_Place flight -> id on "EXIT";			// place on the exit path
 					
 					PA_Destroy flight -> id;						// destroy Proof object
 					destroy flight;
