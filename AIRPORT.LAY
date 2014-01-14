@@ -1,13 +1,7 @@
 *3D
-Define View "(Class)" center -0.0184 0.1866 width 23.5294 Ortho
-Define View "(Home)" center 39.9375 29.4366 width 79.875 Ortho Aspect 0.7143 Speed 0.25 Mouse 5
-Define View "LeftEnd" CameraSphere -306.5381 168.0155 140.724 686.9325 -12 173 0 Lighting -0.1924 -0.1924 -0.9623 Ambient 0.4 0.4 0.4 Grid Size 10 100 Menu ON
-Define View "Above" CameraSphere -30.65381 16.80155 14.0724 68.69325 4.2 9.1 0 Lighting -0.1924 -0.1924 -0.9623 Ambient 0.4 0.4 0.4 Grid Size 10 100 Menu ON
-Define View "Crushing" CameraSphere -595.0508 43.392 -3.2567 268.7919 42 91 0 Lighting -0.1924 -0.1924 -0.9623 Ambient 0.4 0.4 0.4 Grid Size 10 100 Menu ON
-Define View "RightEnd" CameraSphere -306.5381 168.0155 140.724 686.9325 0 0 0 Lighting -0.1924 -0.1924 -0.9623 Ambient 0.4 0.4 0.4 Grid Size 10 100 Menu ON
-Define View "Spring" Dynamic CameraSphere -522.2911 14.9075 68.9745 232.6455 -5.1702 117.4688 0 Lighting 0.5798 -0.123 -0.8054 Ambient 0.6307 0.6307 0.6307 Grid Size 10 100 Menu ON
-
-Define Class kc10 Camera  0 0 0 0 0 0 0 Import "kc10.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 0.01 0.01 RGP -1
+Define View "(Home)" Dynamic CameraSphere 41 -9.0895 0 240.532 90 90 0 Lighting -0.1924 -0.1924 -0.9623 Ambient 0 0 0 Grid Size 1 10 Speed 5
+Define View "Runways" Dynamic CameraSphere -10.5392 -49.714 4.6652 5.8882 11.988 91.944 0 Lighting 0.338 0.6615 -0.6694 Ambient 0 0 0 Grid Size 1 10 Menu ON Toolbar ON
+Define View "Landings" Dynamic CameraSphere -38.8667 -41.0039 0.7941 0.6765 -10.008 179.676 0 Lighting -0.2961 0.4097 -0.8628 Ambient 0 0 0 Grid Size 1 10 Toolbar ON
 
 Define color Backdrop 0 0 0
 Define color Blue 0 0 0.6667
@@ -18,81 +12,164 @@ Define color Pink 1 0 0.6667
 Define color Tan 1 0.6667 0
 Define color Green 0 1 0
 Define color Layout 0.4921 0.4921 0.4921
+Define color F30 0.8353 0.8235 0.7686
+Define color F31 0.6471 0.7255 0.8471
+Define color L3 0.7804 0.8667 0.8784
+Define color L6 0.702 0.6941 0.7569
 
-Define Class PlaneBox Camera 0 0 0 0 0 0 0 Directional
+Define Class kc10 Camera  0 0 0 0 0 0 0 Import "kc10.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 0.01 0.01 RGP -1
+Color Backdrop
+Line 15 114.0908 15 105 114.0908 15
+Line  #1 0 0 0 0 -10 0
+Arc   #2 5 5 -10 0 180 270 normal 0 0 1
+Line  #3 5 -15 0 10 -15 0
+Arc   #4 5 10 -10 0 270 360 normal 0 0 1
+Line  #5 15 -10 0 15 -8 0
+Line  #6 15 40 0 15 70 6
+Arc   #7 45 60 70 6 180 90 normal 0 -0.2 0.9798
+Arc   #8 45 60 69.0908 15 90 0 normal 0 0 1
+Line  #9 105 69.0908 15 105 -70 15
+Line  #10 -20 -70 3 -20 -40 0
+Line  #11 -20 -40 0 -20 10 0
+Arc   #12 5 -15 10 0 180 90 normal 0 0 1
+Line  #13 -15 15 0 -5 15 0
+Arc   #14 5 -5 10 0 90 0 normal 0 0 1
+Line  #15 0 10 0 0 0 0
+Line  #16 -10 5 3 -10 25 3
+Line  #17 -10 25 3 5 25 3
+Line  #18 5 25 3 5 5 3
+Line  #19 5 5 3 -10 5 3
+Line  #20 -10 5 -2 -10 25 -2
+Line  #21 -10 25 -2 5 25 -2
+Line  #22 5 25 -2 5 5 -2
+Line  #23 5 5 -2 -10 5 -2
+Line  #24 -10 5 3 5 5 3
+Line  #25 5 5 3 5 5 -2
+Line  #26 5 5 -2 -10 5 -2
+Line  #27 -10 5 -2 -10 5 3
+Line  #28 -10 25 3 5 25 3
+Line  #29 5 25 3 5 25 -2
+Line  #30 5 25 -2 -10 25 -2
+Line  #31 -10 25 -2 -10 25 3
+Line  #32 12 -10 0 12 60 0
+Line  #33 12 60 0 18 60 0
+Line  #34 18 60 0 18 -10 0
+Line  #35 18 -10 0 12 -10 0
+Line  #36 -23 -40 0 -23 10 0
+Line  #37 -23 10 0 -17 10 0
+Line  #38 -17 10 0 -17 -40 0
+Line  #39 -17 -40 0 -23 -40 0
+Arc   #40 62.7873 42.5 -70 9 360 180 normal -0.0956 0 0.9954
+Arc   #41 126.2 0 0 0 0 360 normal 0 0 1
+Color F31
+PolyLine Filled
+#16 -10 5 3
+#17 -10 25 3
+#18 5 25 3
+#19 5 5 3
+Close
+PolyLine Filled
+#20 -10 5 -2
+#21 -10 25 -2
+#22 5 25 -2
+#23 5 5 -2
+Close
+PolyLine Filled
+#24 -10 5 3
+#25 5 5 3
+#26 5 5 -2
+#27 -10 5 -2
+Close
+PolyLine Filled
+#28 -10 25 3
+#29 5 25 3
+#30 5 25 -2
+#31 -10 25 -2
+Close
+Color F30
+PolyLine Filled
+#32 12 -10 0
+#33 12 60 0
+#34 18 60 0
+#35 18 -10 0
+Close
+PolyLine Filled
+#36 -23 -40 0
+#37 -23 10 0
+#38 -17 10 0
+#39 -17 -40 0
+Close
 
-Line -1 -0.5 -0.5  1 -0.5 -0.5
-Line  1 -0.5 -0.5  1  0.5 -0.5
-Line  1  0.5 -0.5 -1  0.5 -0.5
-Line -1  0.5 -0.5 -1 -0.5 -0.5
-
-Line -1 -0.5  0.5  1 -0.5  0.5
-Line  1 -0.5  0.5  1  0.5  0.5
-Line  1  0.5  0.5 -1  0.5  0.5
-Line -1  0.5  0.5 -1 -0.5  0.5
-
-Line -1 -0.5 -0.5 -1 -0.5  0.5
-Line  1 -0.5 -0.5  1 -0.5  0.5
-Line -1  0.5 -0.5 -1  0.5  0.5
-Line  1  0.5 -0.5  1  0.5 -0.5
-
+Define Path AIRSPACEBK Circular LEAPOK Time 10.0
+Segment #6 15 40 0 15 70 6 30.5941 AUTOROLL 0 -45
+Segment #7 15 70 6 60 114.0908 15 70.6858 CW
+Segment #8 60 114.0908 15 105 69.0908 15 70.6858 CW
+Segment #9 105 69.0908 15 105 50 15 19.0908 AUTOROLL 0 45
+Segment #9 105 50 15 105 -50 15 100
+Segment #9 105 -50 15 105 -70 15 20 AUTOROLL 0 -30
+Segment #40 104.9997 -70 15.0026 -19.9997 -70 2.9974 197.2521 CW
+Segment #10 -20 -70 3 -20 -55 1.5 15.0748 AUTOROLL 0 30
+Segment #10 -20 -55 1.5 -20 -40 0 15.0748 AUTOPITCH 0 15
 End
 
-Color Red
+Define Path AIRSPACE Circular LEAPOK Time 10.0
+Segment #41 -126.2 0 0 -126.2 0 0 1256.63 CW
+End
+
+Define Path DEPARTURE Time 20.0
+Segment #1 0 0 0 0 -10 0 10
+Segment #2 0 -10 0 5 -15 0 7.854 CCW
+Segment #3 5 -15 0 10 -15 0 5
+Segment #4 10 -15 0 15 -10 0 7.854 CCW
+Segment #5 15 -10 0 15 -8 0 2
+Segment #6 15 40 0 15 70 6 30.5941 AUTOROLL 0 -45
+Segment #7 15 70 6 60 114.0908 15 70.6858 CW
+Segment #8 60 114.0908 15 105 69.0908 15 70.6858 CW
+Segment #40 104.9997 -70 15.0026 -19.9997 -70 2.9974 197.2521 CW
+End
+Define Path RUNWAY1 Time 3.0
+Segment #11 -20 -10 0 -20 10 0 20
+Segment #12 -20 10 0 -15 15 0 7.854 CW
+Segment #13 -15 15 0 -5 15 0 10
+Segment #14 -5 15 0 0 10 0 7.854 CW
+Segment #15 0 10 0 0 0 0 10
+End
+Define Path RUNWAY2 Time 3.0
+Segment #11 -20 -10 0 -20 10 0 20
+Segment #12 -20 10 0 -15 15 0 7.854 CW
+Segment #13 -15 15 0 -5 15 0 10
+Segment #14 -5 15 0 0 10 0 7.854 CW
+Segment #15 0 10 0 0 0 0 10
+End
+Define Path RUNWAY3 Time 3.0
+Segment #11 -20 -10 0 -20 10 0 20
+Segment #12 -20 10 0 -15 15 0 7.854 CW
+Segment #13 -15 15 0 -5 15 0 10
+Segment #14 -5 15 0 0 10 0 7.854 CW
+Segment #15 0 10 0 0 0 0 10
+End
+Define Path EXIT
+Segment #11 -20 -10 0 -20 10 0 20
+Segment #12 -20 10 0 -15 15 0 7.854 CW
+Segment #13 -15 15 0 -5 15 0 10
+Segment #14 -5 15 0 0 10 0 7.854 CW
+Segment #15 0 10 0 0 0 0 10
+End
+
 Define Class EmergencyFlight Camera 0 0 0 0 0 0 0 Directional
 CPO kc10 EmgKc10 0 0 0
 End
 
-Color White
 Define Class InternationalFlight Camera 0 0 0 0 0 0 0 Directional
 CPO kc10 IntKc10 0 0 0
 End
 
-Color Blue
 Define Class DomesticFlight Camera 0 0 0 0 0 0 0 Directional
 CPO kc10 DomKc10 0 0 0
 End
 
-Color Yellow
 Define Class RecreationalFlight Camera 0 0 0 0 0 0 0 Directional
 CPO kc10 RecKc10 0 0 0
-End
-
-Color Layout
-Define Class Wash
-Line -9 2 0 9 2 0
-Line -9 -2 0 9 -2 0
-Line 10 1 0 10 -1 0
-Line -10 1 0 -10 -1 0
-End
-
-Color White
-Line #1 10 30 0 30 30 0
-Line #2 50 30 0 70 30 0
-Line #3 30 30 0 51.213 51.213 0
-Line #4 30 30 0 60 30 0
-Line #5 30 30 0 51.213 8.786 0
-Color Backdrop
-Line 30 30 0 50 30 0
-Color White
-Text 1 1 CENTER 20 32 0 AIRSPACE
-Text 1 1 CENTER 32 38 0 RUNWAY1
-Text 1 1 CENTER 40 34 0 RUNWAY2
-Text 1 1 CENTER 32 22 0 RUNWAY3
-Define Path AIRSPACE Accumulating LEAPOK Label 7.5 29.6866 Lag 0.25 Time 0.25
-Segment #1 10 30 0 30 30 0 20
-End
-Define Path RUNWAY1 Label 27.5 29.6866 Time 0.2
-Segment #3 30 30 0 51.213 51.213 0 29.9997
-End
-Define Path RUNWAY2 Label 27.5 29.6866 Time 0.2
-Segment #4 30 30 0 60 30 0 30
-End
-Define Path RUNWAY3 Label 27.5 29.6866 Time 0.2
-Segment #5 30 30 0 51.213 8.786 0 30.0004
-End
-Define Path EXIT Label 48 29.6866 Time 0.25
-Segment #2 50 30 0 50.1 30 0 0.1
 End
 
 End
