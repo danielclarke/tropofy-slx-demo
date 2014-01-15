@@ -156,19 +156,23 @@ Segment #14 -5 15 0 0 10 0 7.854 CW
 Segment #15 0 10 0 0 0 0 10
 End
 
-Define Class EmergencyFlight Camera 0 0 0 0 0 0 0 Directional
+Define Class WaterBomber Camera 0 0 0 0 0 0 0 Directional
+CPO kc10 WBKc10 0 0 0
+End
+
+Define Class Emergency Camera 0 0 0 0 0 0 0 Directional
 CPO kc10 EmgKc10 0 0 0
 End
 
-Define Class InternationalFlight Camera 0 0 0 0 0 0 0 Directional
+Define Class International Camera 0 0 0 0 0 0 0 Directional
 CPO kc10 IntKc10 0 0 0
 End
 
-Define Class DomesticFlight Camera 0 0 0 0 0 0 0 Directional
+Define Class Domestic Camera 0 0 0 0 0 0 0 Directional
 CPO kc10 DomKc10 0 0 0
 End
 
-Define Class RecreationalFlight Camera 0 0 0 0 0 0 0 Directional
+Define Class Recreational Camera 0 0 0 0 0 0 0 Directional
 CPO kc10 RecKc10 0 0 0
 End
 
