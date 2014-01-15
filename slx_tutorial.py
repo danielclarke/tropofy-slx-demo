@@ -93,7 +93,7 @@ class SLXSimpleQueueApp(AppWithDataSets):
 
 def load_example_data(data_set):
     flights = []
-    flights.append(Flight(flight_type="WaterBomber", priority=100, mean_arrival_period=120.0, mean_landing_time=8.0, color="Black"))
+    flights.append(Flight(flight_type="WaterBomber", priority=100, mean_arrival_period=120.0, mean_landing_time=8.0, color="Pink"))
     flights.append(Flight(flight_type="Domestic", priority=5, mean_arrival_period=7.0, mean_landing_time=6.0, color="Blue"))
     flights.append(Flight(flight_type="International", priority=7, mean_arrival_period=12.0, mean_landing_time=9.0, color="Green"))
     flights.append(Flight(flight_type="Recreational", priority=3, mean_arrival_period=60.0, mean_landing_time=15.0, color="Yellow"))
@@ -128,7 +128,7 @@ def invoke_localsolver_using_lsp_file(data_set, fname):
 
     open(avi_file_path, 'w').close()  # clear the solution files if they exist
     
-    p = subprocess.Popen(["c:\wolverine\slx\sse", "airport", fname],
+    p = subprocess.Popen(["c:\wolverine\slx\sse", "/output", "slx_output.log", "airport", fname],
         stdout=subprocess.PIPE,
         cwd=data_set.app.app_folder_path)
     out, _ = p.communicate()
