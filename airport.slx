@@ -57,7 +57,7 @@ module airport {
 
 	procedure main() {
 		
-		PA_ATF "AIRPORT.ATF";	// animation trace file (atf)
+		PA_ATF "airport.atf";	// animation trace file (atf)
 		
 		pointer(puck) e_fork, i_fork, d_fork, r_fork;
 		
