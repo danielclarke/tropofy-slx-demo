@@ -18,7 +18,7 @@ module airport {
 	};
 
 	set(Flight) ranked(descending flight_priority) flight_queue;
-	rn_stream emergency, international, domestic, recreational, landing;
+	rn_stream emergency, international, domestic, recreational, rns_flights, landing;
 	constant float shutdown_time = 24.0 * 60.0; // One day
 	control int shutdown = 0;
 	
@@ -55,14 +55,42 @@ module airport {
 		return flight -> id;
 	}
 
-	procedure main() {
+	procedure init_launch_forks(string(*) argv[*]) {
+		filedef infile input name = argv[1];
+		
+		string(100) flight_type, f_color;
+		int priority;
+		float mean_arrival_period, mean_landing_time;
+		
+		forever {
+			pointer(puck) i_fork;
+			read newline file=infile end=done (flight_type, priority, mean_arrival_period, mean_landing_time, f_color);
+			i_fork = fork priority 1 {
+				forever {
+					launch(rns_flights, flight_type, priority, mean_arrival_period, mean_landing_time, f_color);
+					if (time >= shutdown_time)
+						terminate;
+				}
+			}
+			done:	break;
+		}
+		
+	}
+
+	procedure main(int argc, string(*) argv[*]) {
 		
 		PA_ATF "airport.atf";	// animation trace file (atf)
+		
 		
 		pointer(puck) e_fork, i_fork, d_fork, r_fork;
 		
 		pointer(Flight) flight;
+		
+		print(argc) "argc: _\n";
 
+		init_launch_forks(argv);
+
+		/*
 		e_fork = fork priority 1 {
 			forever {
 				launch(emergency, "EmergencyFlight", 10, 360.0, 22.5, "Red");
@@ -94,6 +122,7 @@ module airport {
 					terminate;
 			}
 		}
+		*/
 		
 		fork priority 1{
 			wait until (time > shutdown_time);
