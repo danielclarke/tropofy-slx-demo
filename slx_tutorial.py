@@ -47,7 +47,7 @@ class ExecuteSLX(ExecuteFunction):
 
 class SLXSimpleQueueApp(AppWithDataSets):
     def get_name(self):
-        return 'SLX Simple Queue'
+        return 'Tropofy SLX Tutorial'
 
     def get_gui(self):
         step_group1 = StepGroup(name='Enter your Data')
@@ -64,7 +64,6 @@ class SLXSimpleQueueApp(AppWithDataSets):
 
     def get_parameters(self):
         return []
-
 
     def get_home_page_content(self):
         return {
@@ -130,7 +129,7 @@ def invoke_slx_simulation(data_set, dat_file_path, trace_file_path):
     out, _ = p.communicate()
 
 def invoke_p3d_animation(data_set, layout_file_path, trace_file_path, avi_file_path):
-    p = subprocess.Popen(["c:\Wolverine\P3D\sp3d", "/MakeAVI", "800", "480", "0", "180", layout_file_path, trace_file_path, avi_file_path],
+    p = subprocess.Popen(["c:\Wolverine\P3D\sp3d", "/MakeAVI", "800", "480", "0", "360", layout_file_path, trace_file_path, avi_file_path],
         stdout=subprocess.PIPE,
         cwd=data_set.app.app_folder_path)
     out, _ = p.communicate()
