@@ -6,11 +6,6 @@ Copyright 2014 Tropofy Pty Ltd, all rights reserved.
 This source file is part of Tropofy and govered by the Tropofy terms of service
 available at: http://www.tropofy.com/terms_of_service.html
 
-The LocalSolver this app is based on can be found at
-http://www.localsolver.com/exampletour.html?file=car_sequencing.zip
-
-Used with permission.
-
 This source file is distributed in the hope that it will be useful, but
 WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
 or FITNESS FOR A PARTICULAR PURPOSE. See the license files for details.
@@ -29,7 +24,6 @@ class Flight(DataSetMixin):
     priority = Column(Integer, nullable=False)
     mean_arrival_period = Column(Float, nullable=False)
     mean_landing_time = Column(Float, nullable=False)
-    color = Column(Text, nullable=False)
 
     __table_args__ = (UniqueConstraint('flight_type', 'data_set_id'),)
 
@@ -45,12 +39,11 @@ class ExecuteSLX(ExecuteFunction):
             "flight_type": ("string", "Flight Type"),
             "priority": ("number", ""),
             "mean_arrival_period": ("number", "minutes"),
-            "mean_landing_time": ("number", "minutes"),
-            "color": ("string", "")
+            "mean_landing_time": ("number", "minutes")
         }
 
     def get_column_ordering(self, data_set):
-        return ["flight_type", "priority", "mean_arrival_period", "mean_landing_time", "color"]
+        return ["flight_type", "priority", "mean_arrival_period", "mean_landing_time"]
 
 class SLXSimpleQueueApp(AppWithDataSets):
     def get_name(self):
@@ -67,7 +60,7 @@ class SLXSimpleQueueApp(AppWithDataSets):
         return [step_group1, step_group2, step_group3]
 
     def get_examples(self):
-        return {"Single flight type": load_example_data}
+        return {"Multiple Flight Types": load_example_data}
 
     def get_parameters(self):
         return []
@@ -93,26 +86,34 @@ class SLXSimpleQueueApp(AppWithDataSets):
 
 def load_example_data(data_set):
     flights = []
-    flights.append(Flight(flight_type="WaterBomber", priority=100, mean_arrival_period=120.0, mean_landing_time=8.0, color="Pink"))
-    flights.append(Flight(flight_type="Domestic", priority=5, mean_arrival_period=7.0, mean_landing_time=6.0, color="Blue"))
-    flights.append(Flight(flight_type="International", priority=7, mean_arrival_period=12.0, mean_landing_time=9.0, color="Green"))
-    flights.append(Flight(flight_type="Recreational", priority=3, mean_arrival_period=60.0, mean_landing_time=15.0, color="Yellow"))
+    flights.append(Flight(flight_type="WaterBomber", priority=100, mean_arrival_period=120.0, mean_landing_time=15.0))
+    flights.append(Flight(flight_type="Domestic", priority=5, mean_arrival_period=7.0, mean_landing_time=6.0))
+    flights.append(Flight(flight_type="International", priority=7, mean_arrival_period=9.0, mean_landing_time=8.0))
+    flights.append(Flight(flight_type="Recreational", priority=3, mean_arrival_period=60.0, mean_landing_time=20.0))
     data_set.add_all(flights)
 
 def get_table_data(data_set):
     data = []
     for row in data_set.query(Flight).all():
-        data.append([row.flight_type, row.priority, row.mean_arrival_period, row.mean_landing_time, row.color])
+        data.append([row.flight_type, row.priority, row.mean_arrival_period, row.mean_landing_time])
     return data
 
 def call_local_solver(data_set):
-    invoke_localsolver_using_lsp_file(data_set, write_slx_input_file('airport.dat', data_set))
+    dat_file_path = data_set.get_path_of_file_in_data_set_folder('airport.dat')
+    write_slx_input_file(data_set, dat_file_path)
 
-def write_slx_input_file(fname, data_set):
+    layout_file_path = 'airport.lay'
+    trace_file_path = data_set.get_path_of_file_in_data_set_folder('airport.atf')
+    avi_file_path = data_set.get_path_of_file_in_data_set_folder('airport.avi')
+
+    invoke_slx_simulation(data_set, dat_file_path, trace_file_path)
+    invoke_p3d_animation(data_set, layout_file_path, trace_file_path, avi_file_path)
+
+def write_slx_input_file(data_set, dat_file_path):
     
     data = get_table_data(data_set)
     
-    f = open(fname, 'w')
+    f = open(dat_file_path, 'w')
     
     for row in data:
         for element in row:
@@ -120,19 +121,16 @@ def write_slx_input_file(fname, data_set):
         f.write('\n')
     f.close()
     
-    return fname
+    return dat_file_path
 
-def invoke_localsolver_using_lsp_file(data_set, fname):
-    # Reset solution
-    avi_file_path = data_set.get_path_of_file_in_data_set_folder('airport.avi')
-
-    open(avi_file_path, 'w').close()  # clear the solution files if they exist
-    
-    p = subprocess.Popen(["c:\wolverine\slx\sse", "/output", "slx_output.log", "airport", fname],
+def invoke_slx_simulation(data_set, dat_file_path, trace_file_path):
+    p = subprocess.Popen(["c:\wolverine\slx\sse", "/output", "slx_output.log", "airport", dat_file_path, trace_file_path],
         stdout=subprocess.PIPE,
         cwd=data_set.app.app_folder_path)
     out, _ = p.communicate()
-    
-    p = subprocess.Popen(["p3dToAvi.bat"],
+
+def invoke_p3d_animation(data_set, layout_file_path, trace_file_path, avi_file_path):
+    p = subprocess.Popen(["c:\Wolverine\P3D\sp3d", "/MakeAVI", "800", "480", "0", "180", layout_file_path, trace_file_path, avi_file_path],
         stdout=subprocess.PIPE,
         cwd=data_set.app.app_folder_path)
+    out, _ = p.communicate()
