@@ -13,7 +13,8 @@ module airport {
   int ID = 2;
 	constant float TIME_SCALE = 1.0;
 	constant float PA_TIME_SCALE = 2.0;
-	set(Objekt) ranked(descending priority) OBJEKT_QUEUES[4];
+	constant int NUM_PROCESSORS = 3;
+	set(Objekt) ranked(descending priority) OBJEKT_QUEUES[NUM_PROCESSORS + 1];
 	rn_stream emergency, international, domestic, recreational, RNS_OBJEKTS, RNS_PROCESSING;
 	constant float SHUTDOWN_TIME = 24.0 * 60.0 * TIME_SCALE; // One day
 	control int SHUTDOWN = 0;
@@ -43,7 +44,6 @@ module airport {
 		float mean_arrival_period;
 		int curr_id;
 		float curr_objekt_time;
-		pointer(Objekt) objekt;
 		
 		initial {
 			pa_objekt_type = pa_objekt_type_in;
@@ -65,25 +65,25 @@ module airport {
 				PA_Create pa_objekt_type curr_id;
 				PA_Place curr_id on "ENTRY";
 				advance 1.0 * TIME_SCALE;
-				objekt = new Objekt(curr_id, 0, priority, curr_objekt_time);
+				activate new Objekt(curr_id, 0, priority, curr_objekt_time);
 			}
 		}
 	}
 
-	class Processor(int process_id, int in_q_index, int out_q_index, float processing_duration_in) {
+	class Processor(int process_id, int in_q_index, int out_q_index, float mean_processing_duration_in) {
 		float total_queueing_time, total_processing_time;
-		int objekts_landed = 0;
+		int objekts_processed = 0;
 		int id = process_id;
 		int in_q;
 		int out_q;
 		string(8) process_name = "PROCESS";
 		pointer(Objekt) objekt;
-		float processing_duration;
+		float mean_processing_duration;
 
 		initial {
 			in_q = in_q_index;
 			out_q = out_q_index;
-			processing_duration = processing_duration_in;
+			mean_processing_duration = mean_processing_duration_in;
 		}
 
 		actions {
@@ -102,23 +102,33 @@ module airport {
 					total_queueing_time += time - objekt -> arrival_time;
 					PA_Place objekt -> id on process_name;
 					total_processing_time -= time;
-					advance rv_expo(RNS_PROCESSING, processing_duration * TIME_SCALE);
+					advance rv_expo(RNS_PROCESSING, mean_processing_duration * TIME_SCALE);
 					total_processing_time += time; 
-					++objekts_landed;
-
-					destroy objekt;
-
-					//place objekt in outgoing -> objekts;
+					++objekts_processed;
+					seize CONCH;
+						if (out_q == NUM_PROCESSORS) {
+							destroy objekt;
+						} else {
+							place objekt in OBJEKT_QUEUES[out_q];
+						}
+					release CONCH;
 				} else {
-					print (time, objekts_landed, total_processing_time / time, total_queueing_time / objekts_landed, ID)
+					print (time, objekts_processed, total_processing_time / time, total_queueing_time / objekts_processed, ID)
 						"Time _.__"
-						"Objekts Landed: _____|"
+						"Objekts Processed: _____|"
 						"Runway Utilization: _.___|"
 						"Mean Queueing Time/Objekt: _.__ minutes"
 						"ID: _\n\n";
-					destroy objekt;
-					SHUTDOWN += 1;
-					terminate;
+					seize CONCH;
+					if (out_q == NUM_PROCESSORS) {
+						destroy objekt;
+						SHUTDOWN += 1;
+					} else {
+						place objekt in OBJEKT_QUEUES[out_q];
+					};
+					print(SHUTDOWN) "_\n"; 
+					release CONCH;
+					break;
 				}
 			}
 		}
@@ -138,23 +148,27 @@ module airport {
 	}
 
 	procedure main(int argc, string(*) argv[*]) {
-		int num_processors = 3;
 		int incr1 = 0;
 		PA_ATF argv[2];	// animation trace file (atf)
 		PA_Set viewing_speed PA_TIME_SCALE;
 
 		init_launchers(argv); //start launching objekts
+		/*
 		fork priority 1 {
 			wait until (time > SHUTDOWN_TIME);
-			for(incr1 = 1; incr1 <= num_processors; incr1++) {
+			for(incr1 = 1; incr1 <= NUM_PROCESSORS; incr1++) {
 				activate new Objekt(-1, 1, 2, -1);
 			}
 			terminate;
+		}*/
+		for(incr1 = 1; incr1 <= NUM_PROCESSORS; incr1++) {
+			activate new Processor(incr1, incr1, incr1 + 1, 5.0);
 		}
-		for(incr1 = 1; incr1 <= num_processors; incr1++) {
-			activate new Processor(incr1, 1, 2, 5.0);
+		wait until (time > SHUTDOWN_TIME);
+		for(incr1 = 1; incr1 <= NUM_PROCESSORS; incr1++) {
+			activate new Objekt(-1, 1, 2, -1);
 		}
-		wait until (SHUTDOWN == num_processors);
+		wait until (SHUTDOWN == 1);
 		PA_End;
 	}	// End of main
 }
