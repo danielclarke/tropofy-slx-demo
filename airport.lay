@@ -30,19 +30,19 @@ Line #3 0 10 0 0 0 0
 Line #4 0 -10 0 0 0 0
 Line #5 0 0 0 20 0 0
 
-Define Path AIRSPACE Accumulating LEAPOK Speed 20
+Define Path ENTRY Accumulating LEAPOK Speed 20
 Segment #5 20 0 0 0 0 0 20
 End
 
-Define Path RUNWAY1 Speed 10
+Define Path PROCESS1 Speed 10
 Segment #2 0 0 0 -10 0 0 10
 End
 
-Define Path RUNWAY2 Speed 10
+Define Path PROCESS2 Speed 10
 Segment #3 0 0 0 0 10 0 10
 End
 
-Define Path RUNWAY3 Speed 10
+Define Path PROCESS3 Speed 10
 Segment #4 0 0 0 0 -10 0 10
 End
 
