@@ -63,7 +63,7 @@ module airport {
 				seize CONCH;
 					objekt = new Objekt(0, priority, curr_objekt_time);
 					PA_Create pa_objekt_type objekt -> id;
-					PA_Place objekt -> id on "ENTRY";
+					PA_Place objekt -> id on "QUEUE1";
 					advance 1.0 * TIME_SCALE;
 					place objekt into OBJEKT_QUEUES[start_q_id];
 					++NUM_OBJEKTS;
@@ -101,6 +101,7 @@ module airport {
 					}
 				release CONCH;
 				if(objekt -> killer < 1) {
+					advance 1.0;
 					total_queueing_time += time - objekt -> arrival_time;
 					PA_Place objekt -> id on process_name;
 					total_processing_time -= time;
@@ -109,10 +110,12 @@ module airport {
 					++objekts_processed;
 					seize CONCH;
 						if (out_q == NUM_PROCESSES + 1) {
+							PA_Destroy objekt -> id;
 							destroy objekt;
 							--NUM_OBJEKTS;
 						} else {
 							place objekt in OBJEKT_QUEUES[out_q];
+							PA_Place objekt -> id on "QUEUE" cat ascii(out_q + 48);
 						}
 					release CONCH;
 				} else {
