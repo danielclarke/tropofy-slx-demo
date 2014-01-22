@@ -108,16 +108,20 @@ module airport {
 					advance rv_expo(RNS_PROCESSING, mean_processing_duration * TIME_SCALE);
 					total_processing_time += time; 
 					++objekts_processed;
-					seize CONCH;
 						if (out_q == NUM_PROCESSES + 1) {
-							PA_Destroy objekt -> id;
-							destroy objekt;
-							--NUM_OBJEKTS;
+							seize CONCH;
+								PA_Destroy objekt -> id;
+								destroy objekt;
+								--NUM_OBJEKTS;
+							release CONCH;
 						} else {
-							place objekt in OBJEKT_QUEUES[out_q];
+							PA_Place objekt -> id on "EXITPROCESS" cat ascii(id + 48);
+							advance 0.5;
+							seize CONCH;
+								place objekt in OBJEKT_QUEUES[out_q];
+							release CONCH;
 							PA_Place objekt -> id on "QUEUE" cat ascii(out_q + 48);
 						}
-					release CONCH;
 				} else {
 					seize CONCH;
 						place objekt into OBJEKT_QUEUES[in_q];
