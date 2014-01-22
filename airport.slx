@@ -10,26 +10,26 @@ import <proof3d>
 
 module airport {
 
-  int ID = 2;
-	constant float TIME_SCALE = 1.0;
+ 	constant float TIME_SCALE = 1.0;
 	constant float PA_TIME_SCALE = 2.0;
 	constant int NUM_PROCESSES = 4;
 	set(Objekt) ranked(descending priority) OBJEKT_QUEUES[NUM_PROCESSES];
-	rn_stream emergency, international, domestic, recreational, RNS_OBJEKTS, RNS_PROCESSING;
+	rn_stream RNS_OBJEKTS, RNS_PROCESSING;
 	constant float SHUTDOWN_TIME = 24.0 * 60.0 * TIME_SCALE; // One day
 	control int SHUTDOWN = 0;
 	control int NUM_OBJEKTS;
 	facility CONCH;
 
-	class Objekt(int objekt_id, int objekt_killer, int objekt_priority, float objekt_arrival_time) {
+	class Objekt(int objekt_killer, int objekt_priority, float objekt_arrival_time) {
 		
+		static int num_objekts;
 		int id;
 		int killer;
 		int priority;
 		float arrival_time;
 		
 		initial {
-			id = objekt_id;
+			id = ++num_objekts;
 			killer = objekt_killer;
 			priority = objekt_priority;
 			arrival_time = objekt_arrival_time;
@@ -42,7 +42,6 @@ module airport {
 		int priority;
 		float mean_arrival_period;
 		int start_q_id;
-		int curr_id;
 		float curr_objekt_time;
 		pointer(Objekt) objekt;
 		
@@ -62,14 +61,13 @@ module airport {
 				if (time >= SHUTDOWN_TIME)
 					break;
 				seize CONCH;
-					curr_id = ID++;
+					objekt = new Objekt(0, priority, curr_objekt_time);
+					PA_Create pa_objekt_type objekt -> id;
+					PA_Place objekt -> id on "ENTRY";
+					advance 1.0 * TIME_SCALE;
+					place objekt into OBJEKT_QUEUES[start_q_id];
 					++NUM_OBJEKTS;
 				release CONCH;
-				PA_Create pa_objekt_type curr_id;
-				PA_Place curr_id on "ENTRY";
-				advance 1.0 * TIME_SCALE;
-				objekt = new Objekt(curr_id, 0, priority, curr_objekt_time);
-				place objekt into OBJEKT_QUEUES[start_q_id];
 			}
 		}
 	}
@@ -95,7 +93,6 @@ module airport {
 			forever {
 				wait until (OBJEKT_QUEUES[in_q].size > 0);
 				seize CONCH;
-					print(in_q, OBJEKT_QUEUES[in_q].size)"_, _\n";
 					if(OBJEKT_QUEUES[in_q].size > 0) {
 						objekt = first Objekt in OBJEKT_QUEUES[in_q];
 						remove objekt from OBJEKT_QUEUES[in_q];
@@ -124,7 +121,7 @@ module airport {
 					release CONCH;
 					print (process_name, objekts_processed)
 						"_"
-						"Objekts Processed: _____";
+						"Objekts Processed: _____\n\n";
 					seize CONCH;
 						SHUTDOWN += 1;
 					release CONCH;
@@ -165,7 +162,7 @@ module airport {
 		wait until (time > SHUTDOWN_TIME);
 		wait until (NUM_OBJEKTS == 0);
 		for(incr1 = 1; incr1 <= NUM_PROCESSES; incr1++) {
-			place new Objekt(-1, 1, 1, -1) into OBJEKT_QUEUES[incr1];
+			place new Objekt(1, 1, -1) into OBJEKT_QUEUES[incr1];
 		}
 		wait until (SHUTDOWN == num_processors);
 		PA_End;
