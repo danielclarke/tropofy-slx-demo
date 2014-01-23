@@ -13,40 +13,40 @@ module airport {
  	constant float TIME_SCALE = 1.0;
 	constant float PA_TIME_SCALE = 2.0;
 	constant int NUM_PROCESSES = 4;
-	set(Objekt) ranked(descending priority) OBJEKT_QUEUES[NUM_PROCESSES];
-	rn_stream RNS_OBJEKTS, RNS_PROCESSING;
+	set(Box) ranked(descending priority) BOX_QUEUES[NUM_PROCESSES];
+	rn_stream RNS_BOXES, RNS_PROCESSING;
 	constant float SHUTDOWN_TIME = 24.0 * 60.0 * TIME_SCALE; // One day
 	control int SHUTDOWN = 0;
-	control int NUM_OBJEKTS;
+	control int NUM_BOXES;
 	facility CONCH;
 
-	class Objekt(int objekt_killer, int objekt_priority, float objekt_arrival_time) {
+	class Box(int box_killer, int box_priority, float box_arrival_time) {
 		
-		static int num_objekts;
+		static int num_boxes;
 		int id;
 		int killer;
 		int priority;
 		float arrival_time;
 		
 		initial {
-			id = ++num_objekts;
-			killer = objekt_killer;
-			priority = objekt_priority;
-			arrival_time = objekt_arrival_time;
+			id = ++num_boxes;
+			killer = box_killer;
+			priority = box_priority;
+			arrival_time = box_arrival_time;
 		}
 		actions {}
 	}
 
-	class Launcher(string(*) pa_objekt_type_in, int priority_in, float mean_arrival_period_in, int start_q_id_in) {
-		string(100) pa_objekt_type;
+	class Launcher(string(*) pa_box_type_in, int priority_in, float mean_arrival_period_in, int start_q_id_in) {
+		string(100) pa_box_type;
 		int priority;
 		float mean_arrival_period;
 		int start_q_id;
-		float curr_objekt_time;
-		pointer(Objekt) objekt;
+		float curr_box_time;
+		pointer(Box) box;
 		
 		initial {
-			pa_objekt_type = pa_objekt_type_in;
+			pa_box_type = pa_box_type_in;
 			priority = priority_in;
 			mean_arrival_period = mean_arrival_period_in;
 			start_q_id = start_q_id_in;
@@ -55,18 +55,18 @@ module airport {
 		actions {
 			forever {
 				seize CONCH;
-					curr_objekt_time = rv_expo(RNS_OBJEKTS, mean_arrival_period * TIME_SCALE);
+					curr_box_time = rv_expo(RNS_BOXES, mean_arrival_period * TIME_SCALE);
 				release CONCH;
-				advance curr_objekt_time;
+				advance curr_box_time;
 				if (time >= SHUTDOWN_TIME)
 					break;
 				seize CONCH;
-					objekt = new Objekt(0, priority, curr_objekt_time);
-					PA_Create pa_objekt_type objekt -> id;
-					PA_Place objekt -> id on "QUEUE1";
+					box = new Box(0, priority, curr_box_time);
+					PA_Create pa_box_type box -> id;
+					PA_Place box -> id on "QUEUE1";
 					advance 1.0 * TIME_SCALE;
-					place objekt into OBJEKT_QUEUES[start_q_id];
-					++NUM_OBJEKTS;
+					place box into BOX_QUEUES[start_q_id];
+					++NUM_BOXES;
 				release CONCH;
 			}
 		}
@@ -74,12 +74,12 @@ module airport {
 
 	class Processor(int process_id, int in_q_index, int out_q_index, float mean_processing_duration_in) {
 		float total_queueing_time, total_processing_time;
-		int objekts_processed = 0;
+		int boxes_processed = 0;
 		int id = process_id;
 		int in_q;
 		int out_q;
 		string(8) process_name = "PROCESS";
-		pointer(Objekt) objekt;
+		pointer(Box) box;
 		float mean_processing_duration;
 
 		initial {
@@ -91,44 +91,44 @@ module airport {
 
 		actions {
 			forever {
-				wait until (OBJEKT_QUEUES[in_q].size > 0);
+				wait until (BOX_QUEUES[in_q].size > 0);
 				seize CONCH;
-					if(OBJEKT_QUEUES[in_q].size > 0) {
-						objekt = first Objekt in OBJEKT_QUEUES[in_q];
-						remove objekt from OBJEKT_QUEUES[in_q];
+					if(BOX_QUEUES[in_q].size > 0) {
+						box = first Box in BOX_QUEUES[in_q];
+						remove box from BOX_QUEUES[in_q];
 					} else {
 						continue;
 					}
 				release CONCH;
-				if(objekt -> killer < 1) {
+				if(box -> killer < 1) {
 					advance 1.0;
-					total_queueing_time += time - objekt -> arrival_time;
-					PA_Place objekt -> id on process_name;
+					total_queueing_time += time - box -> arrival_time;
+					PA_Place box -> id on process_name;
 					total_processing_time -= time;
 					advance rv_expo(RNS_PROCESSING, mean_processing_duration * TIME_SCALE);
 					total_processing_time += time; 
-					++objekts_processed;
+					++boxes_processed;
 						if (out_q == NUM_PROCESSES + 1) {
 							seize CONCH;
-								PA_Destroy objekt -> id;
-								destroy objekt;
-								--NUM_OBJEKTS;
+								PA_Destroy box -> id;
+								destroy box;
+								--NUM_BOXES;
 							release CONCH;
 						} else {
-							PA_Place objekt -> id on "EXITPROCESS" cat ascii(id + 48);
+							PA_Place box -> id on "EXITPROCESS" cat ascii(id + 48);
 							advance 0.5;
 							seize CONCH;
-								place objekt in OBJEKT_QUEUES[out_q];
+								place box in BOX_QUEUES[out_q];
 							release CONCH;
-							PA_Place objekt -> id on "QUEUE" cat ascii(out_q + 48);
+							PA_Place box -> id on "QUEUE" cat ascii(out_q + 48);
 						}
 				} else {
 					seize CONCH;
-						place objekt into OBJEKT_QUEUES[in_q];
+						place box into BOX_QUEUES[in_q];
 					release CONCH;
-					print (process_name, objekts_processed)
+					print (process_name, boxes_processed)
 						"_"
-						"Objekts Processed: _____\n\n";
+						"Boxs Processed: _____\n\n";
 					seize CONCH;
 						SHUTDOWN += 1;
 					release CONCH;
@@ -140,14 +140,14 @@ module airport {
 
 	procedure init_launchers(string(*) argv[*]) {
 		filedef infile input name = argv[1];
-		string(100) objekt_type;
+		string(100) box_type;
 		int priority;
-		float mean_arrival_period, mean_processing_time;
-		pointer(Objekt) objekt;
+		float mean_arrival_period;
+		pointer(Box) box;
 		
 		forever {
-			read newline file=infile end=done (objekt_type, priority, mean_arrival_period, mean_processing_time);
-			activate new Launcher(objekt_type, priority, mean_arrival_period, 1);
+			read newline file=infile end=done (box_type, priority, mean_arrival_period);
+			activate new Launcher(box_type, priority, mean_arrival_period, 1);
 		}
 		done:;
 	}
@@ -159,7 +159,7 @@ module airport {
 		int num_processors;
 		int processors_per_process[NUM_PROCESSES] = {3, 2, 1, 4};
 
-		init_launchers(argv); //start launching objekts
+		init_launchers(argv); //start launching boxes
 		for(incr1 = 1; incr1 <= NUM_PROCESSES; incr1++) {
 			int i;
 			for(i = 1; i <= processors_per_process[incr1]; i++) {
@@ -167,9 +167,9 @@ module airport {
 			}
 		}
 		wait until (time > SHUTDOWN_TIME);
-		wait until (NUM_OBJEKTS == 0);
+		wait until (NUM_BOXES == 0);
 		for(incr1 = 1; incr1 <= NUM_PROCESSES; incr1++) {
-			place new Objekt(1, 1, -1) into OBJEKT_QUEUES[incr1];
+			place new Box(1, 1, -1) into BOX_QUEUES[incr1];
 		}
 		wait until (SHUTDOWN == num_processors);
 		PA_End;
