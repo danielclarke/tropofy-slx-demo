@@ -31,7 +31,8 @@ module airport {
 		actions {}
 	}
 
-	class Launcher(string(*) pa_box_type_in, int priority_in, float mean_arrival_period_in, float processing_time_factor_in, start_q_id_in) {
+	class Launcher(string(*) pa_box_type_in, int priority_in, float mean_arrival_period_in,
+      float processing_time_factor_in, start_q_id_in) {
 		string(100) pa_box_type;
 		int priority;
 		float mean_arrival_period;
@@ -138,38 +139,26 @@ module airport {
 		done:;
 	}
 
-  procedure init_processors(string(*) fname, int processors_per_process[*]) returning int {
-    filedef infile input name = fname;
-    int processor_number;
-    int process = 1;
-    int num_processors_for_process;
-    float processing_time;
-		forever {
-			read newline file=infile end=done (processor_number, processing_time);
-			activate new Processor(processor_number, process, process + 1, processing_time);
-      ++num_processors_for_process;
-      if(num_processors_for_process == processors_per_process[process]) {
-        ++process;
-        num_processors_for_process = 0;
-      }
-		}
-		done: return processor_number;
-  }
+  procedure main(int argc, string(*) argv[*]) {
+    int incr1 = 0;
+    PA_ATF argv[3]; // animation trace file (atf)
+    PA_Set viewing_speed PA_TIME_SCALE;
+    int num_processors;
+    int processors_per_process[NUM_PROCESSES] = {3, 2, 1, 4};
 
-	procedure main(int argc, string(*) argv[*]) {
-		int incr1 = 0;
-		PA_ATF argv[3];
-		PA_Set viewing_speed PA_TIME_SCALE;
-		int num_processors;
-		int processors_per_process[NUM_PROCESSES] = {3, 2, 1, 4};
-		init_launchers(argv[1]);
-		num_processors = init_processors(argv[2], processors_per_process);
-		wait until (time > SHUTDOWN_TIME);
-		wait until (NUM_BOXES == 0);
-		for(incr1 = 1; incr1 <= NUM_PROCESSES; incr1++) {
-			place new Box(1, 1, 0, -1) into BOX_QUEUES[incr1];
-		}
-		wait until (SHUTDOWN == num_processors);
-		PA_End;
-	}
+    init_launchers(argv[1]); //start launching boxes
+    for(incr1 = 1; incr1 <= NUM_PROCESSES; incr1++) {
+      int i;
+      for(i = 1; i <= processors_per_process[incr1]; i++) {
+        activate new Processor(num_processors++, incr1, incr1 + 1, processors_per_process[incr1]);
+      }
+    }
+    wait until (time > SHUTDOWN_TIME);
+    wait until (NUM_BOXES == 0);
+    for(incr1 = 1; incr1 <= NUM_PROCESSES; incr1++) {
+      place new Box(1, 1, 0, 1) into BOX_QUEUES[incr1];
+    }
+    wait until (SHUTDOWN == num_processors);
+    PA_End;
+  }       // End of main
 }
