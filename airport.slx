@@ -147,10 +147,15 @@ module airport {
     int processors_per_process[NUM_PROCESSES] = {3, 2, 1, 4};
 
     init_launchers(argv[1]); //start launching boxes
+
+		filedef infile input name = argv[2];
     for(incr1 = 1; incr1 <= NUM_PROCESSES; incr1++) {
       int i;
+      int processor_number;
+      int processing_time;
       for(i = 1; i <= processors_per_process[incr1]; i++) {
-        activate new Processor(num_processors++, incr1, incr1 + 1, processors_per_process[incr1]);
+        read newline file=infile (processor_number, processing_time);
+        activate new Processor(num_processors++, incr1, incr1 + 1, processing_time);
       }
     }
     wait until (time > SHUTDOWN_TIME);
