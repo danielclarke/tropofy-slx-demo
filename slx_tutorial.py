@@ -133,12 +133,12 @@ def call_local_solver(data_set):
     trace_file_path = data_set.get_path_of_file_in_data_set_folder('airport.atf')
     avi_file_path = data_set.get_path_of_file_in_data_set_folder('airport.avi')
 
-    data_set.send_progress_message('Simulating scenario')
-    invoke_slx_simulation(data_set, box_dat_file_path, trace_file_path)
-    data_set.send_progress_message('Simulation finished')
-    data_set.send_progress_message('Generating AVI')
+    data_set.send_progress_message('1. Simulating scenario \n')
+    invoke_slx_simulation(data_set, box_dat_file_path, processor_dat_file_path, trace_file_path)
+    data_set.send_progress_message('2. Simulation finished \n')
+    data_set.send_progress_message('3. Generating AVI \n')
     invoke_p3d_animation(data_set, layout_file_path, trace_file_path, avi_file_path)
-    data_set.send_progress_message('AVI generated')
+    data_set.send_progress_message('4. AVI generated \n')
 
 def write_slx_box_dat_file(data_set, box_dat_file_path):
 
@@ -163,8 +163,9 @@ def write_dat_file(data, file_path):
 
     return file_path
 
-def invoke_slx_simulation(data_set, box_dat_file_path, trace_file_path):
-    p = subprocess.Popen(["c:\wolverine\slx\sse", "/output", "slx_output.log", "airport", box_dat_file_path, trace_file_path],
+def invoke_slx_simulation(data_set, box_dat_file_path, processor_dat_file_path, trace_file_path):
+    p = subprocess.Popen(["c:\wolverine\slx\sse", "/output", "slx_output.log", "airport",
+                          box_dat_file_path, processor_dat_file_path, trace_file_path],
         stdout=subprocess.PIPE,
         cwd=data_set.app.app_folder_path)
     out, _ = p.communicate()

@@ -1,8 +1,3 @@
-//*****************************************************************************
-//	
-//*****************************************************************************
-
-import <stats.slx>
 import <h7>
 import <proof3d>
 
@@ -10,61 +5,60 @@ import <proof3d>
 
 module airport {
 
- 	constant float TIME_SCALE = 1.0;
 	constant float PA_TIME_SCALE = 2.0;
 	constant int NUM_PROCESSES = 4;
 	set(Box) ranked(descending priority) BOX_QUEUES[NUM_PROCESSES];
 	rn_stream RNS_BOXES, RNS_PROCESSING;
-	constant float SHUTDOWN_TIME = 24.0 * 60.0 * TIME_SCALE; // One day
+	constant float SHUTDOWN_TIME = 24.0 * 60.0; // One day
 	control int SHUTDOWN = 0;
 	control int NUM_BOXES;
 	facility CONCH;
 
-	class Box(int box_killer, int box_priority, float box_arrival_time) {
-		
+	class Box(int box_killer, int box_priority, float box_arrival_time, float box_processing_time_factor) {
 		static int num_boxes;
 		int id;
 		int killer;
 		int priority;
 		float arrival_time;
-		
+		float processing_time_factor;
 		initial {
 			id = ++num_boxes;
 			killer = box_killer;
 			priority = box_priority;
 			arrival_time = box_arrival_time;
+			processing_time_factor = box_processing_time_factor;
 		}
 		actions {}
 	}
 
-	class Launcher(string(*) pa_box_type_in, int priority_in, float mean_arrival_period_in, int start_q_id_in) {
+	class Launcher(string(*) pa_box_type_in, int priority_in, float mean_arrival_period_in, float processing_time_factor_in, start_q_id_in) {
 		string(100) pa_box_type;
 		int priority;
 		float mean_arrival_period;
+		float processing_time_factor;
 		int start_q_id;
 		float curr_box_time;
 		pointer(Box) box;
-		
 		initial {
 			pa_box_type = pa_box_type_in;
 			priority = priority_in;
 			mean_arrival_period = mean_arrival_period_in;
+			processing_time_factor = processing_time_factor_in;
 			start_q_id = start_q_id_in;
 		}
-		
 		actions {
 			forever {
 				seize CONCH;
-					curr_box_time = rv_expo(RNS_BOXES, mean_arrival_period * TIME_SCALE);
+					curr_box_time = rv_expo(RNS_BOXES, mean_arrival_period);
 				release CONCH;
 				advance curr_box_time;
 				if (time >= SHUTDOWN_TIME)
 					break;
 				seize CONCH;
-					box = new Box(0, priority, curr_box_time);
+					box = new Box(0, priority, curr_box_time, processing_time_factor);
 					PA_Create pa_box_type box -> id;
 					PA_Place box -> id on "QUEUE1";
-					advance 1.0 * TIME_SCALE;
+					advance 1.0;
 					place box into BOX_QUEUES[start_q_id];
 					++NUM_BOXES;
 				release CONCH;
@@ -78,17 +72,15 @@ module airport {
 		int id = process_id;
 		int in_q;
 		int out_q;
-		string(8) process_name = "PROCESS";
+		string(8) process_name;
 		pointer(Box) box;
 		float mean_processing_duration;
-
 		initial {
 			in_q = in_q_index;
 			out_q = out_q_index;
 			mean_processing_duration = mean_processing_duration_in;
-			process_name = process_name cat ascii(id + 48);
+			process_name = "PROCESS" cat ascii(id + 48);
 		}
-
 		actions {
 			forever {
 				wait until (BOX_QUEUES[in_q].size > 0);
@@ -105,31 +97,26 @@ module airport {
 					total_queueing_time += time - box -> arrival_time;
 					PA_Place box -> id on process_name;
 					total_processing_time -= time;
-					advance rv_expo(RNS_PROCESSING, mean_processing_duration * TIME_SCALE);
-					total_processing_time += time; 
+					advance rv_expo(RNS_PROCESSING, mean_processing_duration * box -> processing_time_factor);
+					total_processing_time += time;
 					++boxes_processed;
-						if (out_q == NUM_PROCESSES + 1) {
-							seize CONCH;
-								PA_Destroy box -> id;
-								destroy box;
-								--NUM_BOXES;
-							release CONCH;
-						} else {
-							PA_Place box -> id on "EXITPROCESS" cat ascii(id + 48);
-							advance 0.5;
-							seize CONCH;
-								place box in BOX_QUEUES[out_q];
-							release CONCH;
-							PA_Place box -> id on "QUEUE" cat ascii(out_q + 48);
-						}
+          if (out_q == NUM_PROCESSES + 1) {
+            seize CONCH;
+              PA_Destroy box -> id;
+              destroy box;
+              --NUM_BOXES;
+            release CONCH;
+          } else {
+            PA_Place box -> id on "EXITPROCESS" cat ascii(id + 48);
+            advance 0.5;
+            seize CONCH;
+              place box in BOX_QUEUES[out_q];
+            release CONCH;
+            PA_Place box -> id on "QUEUE" cat ascii(out_q + 48);
+          }
 				} else {
 					seize CONCH;
 						place box into BOX_QUEUES[in_q];
-					release CONCH;
-					print (process_name, boxes_processed)
-						"_"
-						"Boxs Processed: _____\n\n";
-					seize CONCH;
 						SHUTDOWN += 1;
 					release CONCH;
 					break;
@@ -138,40 +125,51 @@ module airport {
 		}
 	}
 
-	procedure init_launchers(string(*) argv[*]) {
-		filedef infile input name = argv[1];
-		string(100) box_type;
+	procedure init_launchers(string(*) fname) {
+		filedef infile input name = fname;
+		string(30) box_type;
 		int priority;
-		float mean_arrival_period;
+		float mean_arrival_period, processing_time_factor;
 		pointer(Box) box;
-		
 		forever {
-			read newline file=infile end=done (box_type, priority, mean_arrival_period);
-			activate new Launcher(box_type, priority, mean_arrival_period, 1);
+			read newline file=infile end=done (box_type, priority, mean_arrival_period, processing_time_factor);
+			activate new Launcher(box_type, priority, mean_arrival_period, processing_time_factor, 1);
 		}
 		done:;
 	}
 
+  procedure init_processors(string(*) fname, int processors_per_process[*]) returning int {
+    filedef infile input name = fname;
+    int processor_number;
+    int process = 1;
+    int num_processors_for_process;
+    float processing_time;
+		forever {
+			read newline file=infile end=done (processor_number, processing_time);
+			activate new Processor(processor_number, process, process + 1, processing_time);
+      ++num_processors_for_process;
+      if(num_processors_for_process == processors_per_process[process]) {
+        ++process;
+        num_processors_for_process = 0;
+      }
+		}
+		done: return processor_number;
+  }
+
 	procedure main(int argc, string(*) argv[*]) {
 		int incr1 = 0;
-		PA_ATF argv[2];	// animation trace file (atf)
+		PA_ATF argv[3];
 		PA_Set viewing_speed PA_TIME_SCALE;
 		int num_processors;
 		int processors_per_process[NUM_PROCESSES] = {3, 2, 1, 4};
-
-		init_launchers(argv); //start launching boxes
-		for(incr1 = 1; incr1 <= NUM_PROCESSES; incr1++) {
-			int i;
-			for(i = 1; i <= processors_per_process[incr1]; i++) {
-				activate new Processor(num_processors++, incr1, incr1 + 1, processors_per_process[incr1]);
-			}
-		}
+		init_launchers(argv[1]);
+		num_processors = init_processors(argv[2], processors_per_process);
 		wait until (time > SHUTDOWN_TIME);
 		wait until (NUM_BOXES == 0);
 		for(incr1 = 1; incr1 <= NUM_PROCESSES; incr1++) {
-			place new Box(1, 1, -1) into BOX_QUEUES[incr1];
+			place new Box(1, 1, 0, -1) into BOX_QUEUES[incr1];
 		}
 		wait until (SHUTDOWN == num_processors);
 		PA_End;
-	}	// End of main
+	}
 }
