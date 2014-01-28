@@ -7,45 +7,45 @@ module airport {
 
 	constant float PA_TIME_SCALE = 2.0;
 	constant int NUM_PROCESSES = 4;
-	set(Box) ranked(descending priority) BOX_QUEUES[NUM_PROCESSES];
-	rn_stream RNS_BOXES, RNS_PROCESSING;
+	set(Box) ranked(descending priority) BOX_QUEUES[NUM_PROCESSES][2];
+  int OPTIONAL_QUEUES[NUM_PROCESSES] = {0, 1, 0, 0};
+  rn_stream RNS_BOXES, RNS_PROCESSING;
 	constant float SHUTDOWN_TIME = 24.0 * 60.0; // One day
 	control int SHUTDOWN = 0;
 	control int NUM_BOXES;
 	facility CONCH;
 
-	class Box(int box_killer, int box_priority, float box_arrival_time, float box_processing_time_factor) {
+	class Box(string(*) box_color, int box_option, int box_priority,
+            float box_arrival_time, float box_processing_time_factor, int box_killer) {
 		static int num_boxes;
+    string(30) color;
+    int option;
 		int id;
-		int killer;
 		int priority;
 		float arrival_time;
 		float processing_time_factor;
+		int killer;
 		initial {
 			id = ++num_boxes;
-			killer = box_killer;
+      color = box_color;
+      option = box_option;
 			priority = box_priority;
 			arrival_time = box_arrival_time;
 			processing_time_factor = box_processing_time_factor;
+			killer = box_killer;
 		}
 		actions {}
 	}
 
-	class Launcher(string(*) pa_box_type_in, int priority_in, float mean_arrival_period_in,
-      float processing_time_factor_in, start_q_id_in) {
-		string(100) pa_box_type;
-		int priority;
-		float mean_arrival_period;
-		float processing_time_factor;
+  class Launcher(pointer(Box) in_box, int in_start_q_id) {
 		int start_q_id;
 		float curr_box_time;
+    float mean_arrival_period;
 		pointer(Box) box;
 		initial {
-			pa_box_type = pa_box_type_in;
-			priority = priority_in;
-			mean_arrival_period = mean_arrival_period_in;
-			processing_time_factor = processing_time_factor_in;
-			start_q_id = start_q_id_in;
+      mean_arrival_period = in_box -> arrival_time;
+      box = in_box;
+			start_q_id = in_start_q_id;
 		}
 		actions {
 			forever {
@@ -56,11 +56,12 @@ module airport {
 				if (time >= SHUTDOWN_TIME)
 					break;
 				seize CONCH;
-					box = new Box(0, priority, curr_box_time, processing_time_factor);
-					PA_Create pa_box_type box -> id;
-					PA_Place box -> id on "QUEUE1";
+          //the in_box from which all are cloned is overwritten here
+					box = new Box(box -> color, box -> option, box -> priority, curr_box_time, box -> processing_time_factor, 0);
+					PA_Create box -> color box -> id;
+					PA_Place box -> id on "QUEUE" cat ascii(start_q_id + 48);
 					advance 1.0;
-					place box into BOX_QUEUES[start_q_id];
+					place box into BOX_QUEUES[start_q_id][1];
 					++NUM_BOXES;
 				release CONCH;
 			}
@@ -84,11 +85,11 @@ module airport {
 		}
 		actions {
 			forever {
-				wait until (BOX_QUEUES[in_q].size > 0);
+				wait until (BOX_QUEUES[in_q][1].size > 0);
 				seize CONCH;
-					if(BOX_QUEUES[in_q].size > 0) {
-						box = first Box in BOX_QUEUES[in_q];
-						remove box from BOX_QUEUES[in_q];
+					if(BOX_QUEUES[in_q][1].size > 0) {
+						box = first Box in BOX_QUEUES[in_q][1];
+						remove box from BOX_QUEUES[in_q][1];
 					} else {
 						continue;
 					}
@@ -111,13 +112,13 @@ module airport {
             PA_Place box -> id on "EXITPROCESS" cat ascii(id + 48);
             advance 0.5;
             seize CONCH;
-              place box in BOX_QUEUES[out_q];
+              place box in BOX_QUEUES[out_q][1];
             release CONCH;
             PA_Place box -> id on "QUEUE" cat ascii(out_q + 48);
           }
 				} else {
 					seize CONCH;
-						place box into BOX_QUEUES[in_q];
+						place box into BOX_QUEUES[in_q][1];
 						SHUTDOWN += 1;
 					release CONCH;
 					break;
@@ -128,13 +129,12 @@ module airport {
 
 	procedure init_launchers(string(*) fname) {
 		filedef infile input name = fname;
-		string(30) box_type;
-		int priority;
-		float mean_arrival_period, processing_time_factor;
-		pointer(Box) box;
+    pointer(Box) box;
 		forever {
-			read newline file=infile end=done (box_type, priority, mean_arrival_period, processing_time_factor);
-			activate new Launcher(box_type, priority, mean_arrival_period, processing_time_factor, 1);
+      box = new Box("", 0, 0, 0, 0, 0);
+			read newline file=infile end=done (box -> color, box -> option, box -> priority,
+                                         box -> arrival_time, box -> processing_time_factor);
+			activate new Launcher(box, 1);
 		}
 		done:;
 	}
@@ -161,7 +161,8 @@ module airport {
     wait until (time > SHUTDOWN_TIME);
     wait until (NUM_BOXES == 0);
     for(incr1 = 1; incr1 <= NUM_PROCESSES; incr1++) {
-      place new Box(1, 1, 0, 1) into BOX_QUEUES[incr1];
+      place new Box("", 1, 1, 1, 0, 1) into BOX_QUEUES[incr1][1];
+      place new Box("", 2, 1, 1, 0, 1) into BOX_QUEUES[incr1][2];
     }
     wait until (SHUTDOWN == num_processors);
     PA_End;
