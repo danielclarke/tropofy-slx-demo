@@ -5,166 +5,163 @@ import <proof3d>
 
 module airport {
 
-	constant float PA_TIME_SCALE = 2.0;
-	constant int NUM_PROCESSES = 4;
-	set(Box) ranked(descending priority) BOX_QUEUES[NUM_PROCESSES][2];
-  int OPTIONAL_QUEUES[NUM_PROCESSES] = {0, 1, 0, 0};
-  rn_stream RNS_BOXES, RNS_PROCESSING;
-	constant float SHUTDOWN_TIME = 24.0 * 60.0; // One day
-	control int SHUTDOWN = 0;
-	control int NUM_BOXES;
-	facility CONCH;
+  facility CONCH, ID_CONCH, Q_CONCH;
+  constant int NUM_PROCESSES = 4;
+  constant float SHUTDOWN_TIME = 24 * 60;
+  control int SHUTDOWN = 0;
+  set(Box) QUEUE[NUM_PROCESSES];
+  rn_stream PROCESS_STREAM, LAUNCH_STREAM;
 
-	class Box(string(*) box_color, int box_option, int box_priority,
-            float box_arrival_time, float box_processing_time_factor, int box_killer) {
-		static int num_boxes;
-    string(30) color;
-    int option;
-		int id;
-		int priority;
-		float arrival_time;
-		float processing_time_factor;
-		int killer;
-		initial {
-			id = ++num_boxes;
-      color = box_color;
-      option = box_option;
-			priority = box_priority;
-			arrival_time = box_arrival_time;
-			processing_time_factor = box_processing_time_factor;
-			killer = box_killer;
-		}
-		actions {}
-	}
+  class StrStrHashEntry (string(*) in_key, string(*) in_val) {
+    string(100) key;
+    string(100) val;
+    initial {
+      key = in_key;
+      val = in_val;
+    }
+  };
 
-  class Launcher(pointer(Box) in_box, int in_start_q_id) {
-		int start_q_id;
-		float curr_box_time;
-    float mean_arrival_period;
-		pointer(Box) box;
-		initial {
-      mean_arrival_period = in_box -> arrival_time;
-      box = in_box;
-			start_q_id = in_start_q_id;
-		}
-		actions {
-			forever {
-				seize CONCH;
-					curr_box_time = rv_expo(RNS_BOXES, mean_arrival_period);
-				release CONCH;
-				advance curr_box_time;
-				if (time >= SHUTDOWN_TIME)
-					break;
-				seize CONCH;
-          //the in_box from which all are cloned is overwritten here
-					box = new Box(box -> color, box -> option, box -> priority, curr_box_time, box -> processing_time_factor, 0);
-					PA_Create box -> color box -> id;
-					PA_Place box -> id on "QUEUE" cat ascii(start_q_id + 48);
-					advance 1.0;
-					place box into BOX_QUEUES[start_q_id][1];
-					++NUM_BOXES;
-				release CONCH;
-			}
-		}
-	}
+  class Hash {
+    set(StrStrHashEntry) ranked(ascending key) dict;
+    procedure st(string(*) key, string(*) val) {
+      pointer(StrStrHashEntry) el;
+      el = retrieve StrStrHashEntry(key=key) from dict;
+      if (el == NULL) {
+        el = new StrStrHashEntry(key, val);
+        place el into dict;
+      } else {
+        el -> val = val;
+      }
+      return;
+    }
+    procedure gt(string(*) key) returning string(100) {
+      pointer(StrStrHashEntry) el;
+      el = retrieve StrStrHashEntry(key=key) from dict;
+      return el -> val;
+    }
+  };
 
-	class Processor(int process_id, int in_q_index, int out_q_index, float mean_processing_duration_in) {
-		float total_queueing_time, total_processing_time;
-		int boxes_processed = 0;
-		int id = process_id;
-		int in_q;
-		int out_q;
-		string(8) process_name;
-		pointer(Box) box;
-		float mean_processing_duration;
-		initial {
-			in_q = in_q_index;
-			out_q = out_q_index;
-			mean_processing_duration = mean_processing_duration_in;
-			process_name = "PROCESS" cat ascii(id + 48);
-		}
-		actions {
-			forever {
-				wait until (BOX_QUEUES[in_q][1].size > 0);
-				seize CONCH;
-					if(BOX_QUEUES[in_q][1].size > 0) {
-						box = first Box in BOX_QUEUES[in_q][1];
-						remove box from BOX_QUEUES[in_q][1];
-					} else {
-						continue;
-					}
-				release CONCH;
-				if(box -> killer < 1) {
-					advance 1.0;
-					total_queueing_time += time - box -> arrival_time;
-					PA_Place box -> id on process_name;
-					total_processing_time -= time;
-					advance rv_expo(RNS_PROCESSING, mean_processing_duration * box -> processing_time_factor);
-					total_processing_time += time;
-					++boxes_processed;
-          if (out_q == NUM_PROCESSES + 1) {
-            seize CONCH;
-              PA_Destroy box -> id;
-              destroy box;
-              --NUM_BOXES;
-            release CONCH;
-          } else {
-            PA_Place box -> id on "EXITPROCESS" cat ascii(id + 48);
-            advance 0.5;
-            seize CONCH;
-              place box in BOX_QUEUES[out_q][1];
-            release CONCH;
-            PA_Place box -> id on "QUEUE" cat ascii(out_q + 48);
-          }
-				} else {
-					seize CONCH;
-						place box into BOX_QUEUES[in_q][1];
-						SHUTDOWN += 1;
-					release CONCH;
+  class Box(string(*) in_color, string(*) in_size) {
+    Hash options;
+    int id;
+    static int num_boxes;
+    float arrival_time;
+    string(100) mesh;
+    initial {
+      id = ++num_boxes;
+      options.st("color", in_color);
+      options.st("size", in_size);
+      mesh = "MESH";
+    }
+  }
+
+  class Launcher(pointer(Box) in_template_box, float in_median_creation_period) {
+    pointer(Box) template_box;
+    pointer(Box) clone_box;
+    float median_creation_period;
+    initial{
+      median_creation_period = in_median_creation_period;
+      template_box = in_template_box;
+    }
+    procedure run() {
+      forever {
+				seize ID_CONCH;
+        clone_box = new Box(template_box -> options.gt("color"), template_box -> options.gt("size"));
+				release ID_CONCH;
+        PA_Create clone_box -> mesh clone_box -> id;
+				PA_Place clone_box -> id on "QUEUE1";
+        advance rv_expo(LAUNCH_STREAM, median_creation_period);
+				if(time >= SHUTDOWN_TIME) {
+					print("shutdown")"_\n";
+					SHUTDOWN = 1;
 					break;
 				}
-			}
-		}
-	}
-
-	procedure init_launchers(string(*) fname) {
-		filedef infile input name = fname;
-    pointer(Box) box;
-		forever {
-      box = new Box("", 0, 0, 0, 0, 0);
-			read newline file=infile end=done (box -> color, box -> option, box -> priority,
-                                         box -> arrival_time, box -> processing_time_factor);
-			activate new Launcher(box, 1);
-		}
-		done:;
-	}
-
-  procedure main(int argc, string(*) argv[*]) {
-    int incr1 = 0;
-    PA_ATF argv[3]; // animation trace file (atf)
-    PA_Set viewing_speed PA_TIME_SCALE;
-    int num_processors;
-    int processors_per_process[NUM_PROCESSES] = {3, 2, 1, 4};
-
-    init_launchers(argv[1]); //start launching boxes
-
-		filedef infile input name = argv[2];
-    for(incr1 = 1; incr1 <= NUM_PROCESSES; incr1++) {
-      int i;
-      int processor_number;
-      int processing_time;
-      for(i = 1; i <= processors_per_process[incr1]; i++) {
-        read newline file=infile (processor_number, processing_time);
-        activate new Processor(num_processors++, incr1, incr1 + 1, processing_time);
+        seize Q_CONCH;
+          place clone_box into QUEUE[1];
+				release Q_CONCH;
       }
     }
-    wait until (time > SHUTDOWN_TIME);
-    wait until (NUM_BOXES == 0);
-    for(incr1 = 1; incr1 <= NUM_PROCESSES; incr1++) {
-      place new Box("", 1, 1, 1, 0, 1) into BOX_QUEUES[incr1][1];
-      place new Box("", 2, 1, 1, 0, 1) into BOX_QUEUES[incr1][2];
+    actions {
+      run();
     }
-    wait until (SHUTDOWN == num_processors);
-    PA_End;
-  }       // End of main
+  }
+
+  class Processor(int in_processor_id, int in_process_id, string(*) in_selector,
+      string(*) in_process_name, float in_median_duration) {
+    int processor_id, in_q, out_q;
+    float median_duration;
+    string(100) process_name, selector;
+    initial {
+      processor_id = in_processor_id;
+      in_q = in_process_id;
+      out_q = in_q + 1;
+      median_duration = in_median_duration;
+      process_name = in_process_name;
+      selector = in_selector;
+    }
+		procedure process(pointer(Box) box) {
+			PA_Place box -> id on "PROCESSOR" cat ascii(processor_id + 48);
+      advance rv_expo(PROCESS_STREAM, median_duration);
+      box -> mesh = process_name cat box -> mesh;
+      PA_Destroy box -> id;
+      PA_Create box -> mesh box -> id;
+			PA_Place box -> id on "QUEUE" cat ascii(out_q + 48);
+		}
+    procedure run() {
+      pointer(Box) box;
+      forever {
+        wait until (QUEUE[in_q].size > 0);
+        seize CONCH;
+        for(box = each Box in QUEUE[in_q] with box -> options.gt(selector) == process_name)
+          break;
+        if (box == NULL) {
+					advance 1;
+					release CONCH;
+          continue;
+        } else {
+          remove box from QUEUE[in_q];
+          release CONCH;
+        }
+				PA_Place box -> id on "PROCESSOR" cat ascii(processor_id + 48);
+        advance rv_expo(PROCESS_STREAM, median_duration);
+        box -> mesh = process_name cat box -> mesh;
+        PA_Destroy box -> id;
+        PA_Create box -> mesh box -> id;
+				PA_Place box -> id on "QUEUE" cat ascii(out_q + 48);
+        place box into QUEUE[out_q];
+      }
+    }
+    actions {
+      run();
+    }
+  }
+
+  class ProcessingUnit(int in_num_processors, string(*) options[*], int in_median_duration) {
+    static int num_units;
+    int id;
+    string(*) options[];
+    initial {
+     id = ++num_units;
+    }
+  }
+
+  procedure main(int argc, string(*) argv[*]) {
+    PA_ATF "data_set_z/airport.atf";
+    set(Launcher) launcher_set;
+    set(Processor) processor_set;
+
+    pointer(Box) b = new Box("RED", "BIG");
+
+    //activate new Launcher(b, 60);
+
+    //pointer(Processor) p = new Processor(1, 1, "color", "BLUE", 45);
+    //place p into processor_set;
+    //activate p;
+
+    //activate new Processor(1, 1, "color", "RED", 45);
+    //activate new Processor(2, 2, "size", "SML", 30);
+    //activate new Processor(2, 2, "size", "BIG", 30);
+    //wait until (SHUTDOWN == 1);
+		//print("end")"_\n";
+  }
 }
