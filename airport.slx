@@ -6,10 +6,10 @@ import <proof3d>
 module airport {
 
   facility CONCH, ID_CONCH, Q_CONCH;
-  constant int NUM_PROCESSES = 4;
+  constant int NUM_PROCESSES = 3;
   constant float SHUTDOWN_TIME = 24 * 60;
   control int SHUTDOWN = 0;
-  set(Box) QUEUE[NUM_PROCESSES];
+  set(Box) QUEUE[NUM_PROCESSES + 1];
   rn_stream PROCESS_STREAM, LAUNCH_STREAM;
 
   class StrStrHashEntry (string(*) in_key, string(*) in_val) {
@@ -51,6 +51,7 @@ module airport {
       id = ++num_boxes;
       options.st("color", in_color);
       options.st("size", in_size);
+      options.st("shape", "shape");
       mesh = "MESH";
     }
   }
@@ -64,84 +65,78 @@ module airport {
       template_box = in_template_box;
     }
     procedure run() {
-      forever {
+      while (time < SHUTDOWN_TIME) {
 				seize ID_CONCH;
         clone_box = new Box(template_box -> options.gt("color"), template_box -> options.gt("size"));
 				release ID_CONCH;
         PA_Create clone_box -> mesh clone_box -> id;
 				PA_Place clone_box -> id on "QUEUE1";
         advance rv_expo(LAUNCH_STREAM, median_creation_period);
-				if(time >= SHUTDOWN_TIME) {
-					print("shutdown")"_\n";
-					SHUTDOWN = 1;
-					break;
-				}
         seize Q_CONCH;
           place clone_box into QUEUE[1];
 				release Q_CONCH;
       }
+      SHUTDOWN = 1;
     }
     actions {
       run();
     }
   }
 
-  class Processor(int in_processor_id, int in_process_id, string(*) in_selector,
-      string(*) in_process_name, float in_median_duration) {
-    int processor_id, in_q, out_q;
+  class Processor(string(*) in_process_name, float in_median_duration) {
+    static int num_processors;
+    int processor_id;
     float median_duration;
-    string(100) process_name, selector;
+    string(100) process_name;
+    control boolean busy;
     initial {
-      processor_id = in_processor_id;
-      in_q = in_process_id;
-      out_q = in_q + 1;
+      processor_id = ++num_processors;
       median_duration = in_median_duration;
       process_name = in_process_name;
-      selector = in_selector;
+      busy = FALSE;
     }
 		procedure process(pointer(Box) box) {
+      busy = TRUE;
 			PA_Place box -> id on "PROCESSOR" cat ascii(processor_id + 48);
       advance rv_expo(PROCESS_STREAM, median_duration);
       box -> mesh = process_name cat box -> mesh;
       PA_Destroy box -> id;
       PA_Create box -> mesh box -> id;
-			PA_Place box -> id on "QUEUE" cat ascii(out_q + 48);
+			PA_Place box -> id on "PROCESSOREXIT" cat ascii(processor_id + 48);
+      advance 0.5;
+      busy = FALSE;
 		}
+  }
+
+  class ProcessingUnit(int in_num_processors, string(*) in_selector, string(*) in_options[*], int in_median_durations[*]) {
+    static int num_units;
+    int id;
+    string(100) selector;
+    set(Processor) ranked(descending process_name) processors; //ranked(, ascending busy)
+    initial {
+      id = ++num_units;
+      selector = in_selector;
+      int i;
+      for (i = 1; i <= array_upper_bound(in_options, 1); i++) {
+        place new Processor(in_options[i], in_median_durations[i]) into processors;
+      }
+    }
     procedure run() {
       pointer(Box) box;
+      pointer(Processor) processor;
       forever {
-        wait until (QUEUE[in_q].size > 0);
-        seize CONCH;
-        for(box = each Box in QUEUE[in_q] with box -> options.gt(selector) == process_name)
-          break;
-        if (box == NULL) {
-					advance 1;
-					release CONCH;
-          continue;
-        } else {
-          remove box from QUEUE[in_q];
-          release CONCH;
-        }
-				PA_Place box -> id on "PROCESSOR" cat ascii(processor_id + 48);
-        advance rv_expo(PROCESS_STREAM, median_duration);
-        box -> mesh = process_name cat box -> mesh;
-        PA_Destroy box -> id;
-        PA_Create box -> mesh box -> id;
-				PA_Place box -> id on "QUEUE" cat ascii(out_q + 48);
-        place box into QUEUE[out_q];
+        wait until (QUEUE[id].size > 0);
+        box = first Box in QUEUE[id];
+        remove box from QUEUE[id];
+        processor = retrieve Processor(process_name = box -> options.gt(selector)) from processors;
+        wait until (processor -> busy == FALSE);
+        processor -> process(box);
+        place box into QUEUE[id + 1];
+        PA_Place box -> id on "QUEUE" cat ascii(id + 1 + 48);
       }
     }
     actions {
       run();
-    }
-  }
-
-  class ProcessingUnit(int in_num_processors, string(*) options[*], int in_median_duration) {
-    static int num_units;
-    int id;
-    string(*) options[];
-    initial {
-     id = ++num_units;
     }
   }
 
@@ -150,18 +145,21 @@ module airport {
     set(Launcher) launcher_set;
     set(Processor) processor_set;
 
-    pointer(Box) b = new Box("RED", "BIG");
+    pointer(Box) b = new Box("red", "big");
+    activate new Launcher(b, 60);
 
-    //activate new Launcher(b, 60);
+    string(100) options[3] = {"red", "green", "blue"};
+    int durations[3] = {45, 45, 45};
+    string(100) options2[1] = {"shape"};
+    int durations2[1] = {20};
 
-    //pointer(Processor) p = new Processor(1, 1, "color", "BLUE", 45);
-    //place p into processor_set;
-    //activate p;
+    pointer(ProcessingUnit) pu = new ProcessingUnit(3, "color", options, durations);
+    activate pu;
 
-    //activate new Processor(1, 1, "color", "RED", 45);
-    //activate new Processor(2, 2, "size", "SML", 30);
-    //activate new Processor(2, 2, "size", "BIG", 30);
-    //wait until (SHUTDOWN == 1);
-		//print("end")"_\n";
+    pu = new ProcessingUnit(1, "shape", options2, durations2);
+    activate pu;
+
+    wait until(SHUTDOWN > 0);
+    print("shutting down")"_\n";
   }
 }
