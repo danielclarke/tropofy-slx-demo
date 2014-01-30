@@ -15,11 +15,19 @@ Define color F31 0.6471 0.7255 0.8471
 Define color L3 0.7804 0.8667 0.8784
 Define color L6 0.702 0.6941 0.7569
 
-Define Class PinkBox Camera  0 0 0 0 0 0 0 Import "PinkBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
-Define Class GreenBox Camera  0 0 0 0 0 0 0 Import "GreenBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
-Define Class BlueBox Camera  0 0 0 0 0 0 0 Import "BlueBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
-Define Class RedBox Camera  0 0 0 0 0 0 0 Import "RedBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
-Define Class YellowBox Camera  0 0 0 0 0 0 0 Import "YellowBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
+Define Class mesh Camera  0 0 0 0 0 0 0 Import "YellowBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
+Define Class redmesh Camera  0 0 0 0 0 0 0 Import "RedBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
+Define Class greenmesh Camera  0 0 0 0 0 0 0 Import "GreenBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
+Define Class bluemesh Camera  0 0 0 0 0 0 0 Import "BlueBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
+Define Class shaperedmesh Camera  0 0 0 0 0 0 0 Import "RedBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
+Define Class shapegreenmesh Camera  0 0 0 0 0 0 0 Import "GreenBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
+Define Class shapebluemesh Camera  0 0 0 0 0 0 0 Import "BlueBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
+Define Class bigshaperedmesh Camera  0 0 0 0 0 0 0 Import "RedBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
+Define Class bigshapegreenmesh Camera  0 0 0 0 0 0 0 Import "GreenBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
+Define Class bigshapebluemesh Camera  0 0 0 0 0 0 0 Import "BlueBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
+Define Class smallshaperedmesh Camera  0 0 0 0 0 0 0 Import "RedBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
+Define Class smallshapegreenmesh Camera  0 0 0 0 0 0 0 Import "GreenBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
+Define Class smallshapebluemesh Camera  0 0 0 0 0 0 0 Import "BlueBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
 
 Color White
 Line #1 0 0 0 10 0 0
@@ -44,11 +52,11 @@ Arc #19 1 12 -1 0 180 270 normal 0 0 1
 Line #20 12 -2 0 18 -2 0
 Arc #21 1 18 -1 0 -90 0 normal 0 0 1
 Arc #22 1 20 -1 0 180 90 normal 0 0 1
-Arc #23 1 10 -9 0 -90 0 normal 0 0 1
-Arc #24 1 12 -9 0 90 180 normal 0 0 1
-Line #25 12 -8 0 18 -8 0
-Arc #26 1 18 -9 0 0 90 normal 0 0 1
-Arc #27 1 20 -9 0 270 180 normal 0 0 1
+Arc #23 1 10 -19 0 -90 0 normal 0 0 1
+Arc #24 1 12 -19 0 90 180 normal 0 0 1
+Line #25 12 -18 0 18 -18 0
+Arc #26 1 18 -19 0 0 90 normal 0 0 1
+Arc #27 1 20 -19 0 270 180 normal 0 0 1
 Arc #28 1 30 -19 0 -90 0 normal 0 0 1
 Arc #29 1 32 -19 0 180 90 normal 0 0 1
 Line #30 31 -19 0 31 -17 0
@@ -66,32 +74,32 @@ Define Path QUEUE1 Accumulating LEAPOK Speed 10
 Segment #1 0 0 0 10 0 0 10
 End
 
-Define Path PROCESS0 Speed 10
+Define Path PROCESSOR1 Speed 10
 Segment #2 10 0 0 18 0 0 8
 End
 
-Defin Path EXITPROCESS0 Speed 4
+Defin Path PROCESSOREXIT1 Speed 4
 Segment #2 18 0 0 20 0 0 2
 End
 
-Define Path PROCESS1 Speed 9.14
+Define Path PROCESSOR2 Speed 9.14
 Segment #12 10 0 0 11 1 0 1.57 CCW
 Segment #13 11 1 0 12 2 0 1.57 CW
 Segment #14 12 2 0 18 2 0 6
 End
 
-Define Path EXITPROCESS1 Speed 6.28
+Define Path PROCESSOREXIT2 Speed 6.28
 Segment #15 18 2 0 19 1 0 1.57 CW
 Segment #16 19 1 0 20 0 0 1.57 CCW
 End
 
-Define Path PROCESS2 Speed 9.14
+Define Path PROCESSOR3 Speed 9.14
 Segment #18 10 0 0 11 -1 0 1.57 CW
 Segment #19 11 -1 0 12 -2 0 1.57 CCW
 Segment #20 12 -2 0 18 -2 0 6
 End
 
-Define Path EXITPROCESS2 Speed 6.28
+Define Path PROCESSOREXIT3 Speed 6.28
 Segment #21 18 -2 0 19 -1 0 1.57 CCW
 Segment #22 19 -1 0 20 0 0 1.57 CW
 End
@@ -102,23 +110,12 @@ Segment #10 30 0 0 30 -10 0 15.708 CW
 Segment #4 30 -10 0 20 -10 0 10
 End
 
-Define Path PROCESS3 Speed 10
+Define Path PROCESSOR4 Speed 10
 Segment #5 20 -10 0 12 -10 0 8
 End
 
-Define Path EXITPROCESS3 Speed 4
+Define Path PROCESSOREXIT4 Speed 4
 Segment #5 12 -10 0 10 -10 0 2
-End
-
-Define Path PROCESS4 Speed 9.14
-Segment #27 20 -10 0 19 -9 0 1.57 CW
-Segment #26 19 -9 0 18 -8 0 1.57 CCW
-Segment #25 18 -8 0 12 -8 0 6
-End
-
-Define Path EXITPROCESS4 Speed 6.28
-Segment #24 12 -8 0 11 -9 0 1.57 CCW
-Segment #23 11 -9 0 10 -10 0 1.57 CW
 End
 
 Define Path QUEUE3 Accumulating LEAPOK Speed 35.708
@@ -127,11 +124,22 @@ Segment #11 0 -10 0 0 -20 0 15.708 CCW
 Segment #7 0 -20 0 10 -20 0 10
 End
 
-Define Path PROCESS5 Speed 10
+Define Path PROCESSOR5 Speed 9.14
+Segment #23 10 -20 0 11 -19 0 1.57 CCW
+Segment #24 11 -19 0 12 -18 0 1.57 CW
+Segment #25 12 -18 0 18 -18 0 6
+End
+
+Define Path PROCESSOREXIT5 Speed 6.28
+Segment #26 18 -18 0 19 -19 0 1.57 CW
+Segment #27 19 -19 0 20 -20 0 1.57 CCW
+End
+
+Define Path PROCESSOR6 Speed 10
 Segment #8 10 -20 0 18 -20 0 8
 End
 
-Define Path EXITPROCESS5 Speed 2
+Define Path PROCESSOREXIT6 Speed 2
 Segment #8 18 -20 0 20 -20 0 2
 End
 
@@ -139,26 +147,26 @@ Define Path QUEUE4 Accumulating LEAPOK Speed 10
 Segment #9 20 -20 0 30 -20 0 10
 End
 
-Define Path PROCESS6 Speed 8.28
+Define Path PROCESSOR7 Speed 8.28
 Segment #28 30 -20 0 31 -19 0 1.57 CCW
 Segment #29 31 -19 0 32 -18 0 1.57 CW
 Segment #36 32 -18 0 34 -18 0
 End
 
-Define Path PROCESS7 Speed 10.28
+Define Path PROCESSOR8 Speed 10.28
 Segment #28 30 -20 0 31 -19 0 1.57 CCW
 Segment #30 31 -19 0 31 -17 0 2
 Segment #31 31 -17 0 32 -16 0 1.57 CW
 Segment #37 32 -16 0 34 -16 0
 End
 
-Define Path PROCESS8 Speed 8.28
+Define Path PROCESSOR9 Speed 8.28
 Segment #32 30 -20 0 31 -21 0 1.57 CW
 Segment #33 31 -21 0 32 -22 0 1.57 CCW
 Segment #38 32 -22 0 34 -22 0
 End
 
-Define Path PROCESS9 Speed 10.28
+Define Path PROCESSOR10 Speed 10.28
 Segment #32 30 -20 0 31 -21 0 1.57 CW
 Segment #34 31 -21 0 31 -23 0 2
 Segment #35 31 -23 0 32 -24 0 1.57 CCW
