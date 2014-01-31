@@ -72,7 +72,7 @@ module airport{
         activate processor;
       }
     }
-    procedure ship(){pointer(Box) box;forever{wait until (QUEUE[id].size>0);box=first Box in QUEUE[id];remove box from QUEUE[id];advance 1;PA_Destroy box->id;}}
+    procedure ship(){pointer(Box) box;forever{wait until (QUEUE[id].size>0);box=first Box in QUEUE[id];remove box from QUEUE[id];advance 1;}}
     actions{if (id<=NUM_PROCESSES){run();}else{ship();}}
   }
   procedure main(int argc,string(*) argv[*]){PA_ATF argv[2];init_launchers(argv[1]);string(6) colors[3]={"red","green","blue"};string(6) shapes[1]={"shape"};string(6) sizes[2]={"big","small"};int durations1[3]={7,7,7};int durations2[1]={5};int durations3[2]={6,6};activate new ProcessingUnit(3,"color",colors,durations1);activate new ProcessingUnit(1,"shape",shapes,durations2);activate new ProcessingUnit(2,"size",sizes,durations3);activate new ProcessingUnit(0,"shape",shapes,durations2);wait until(SHUTDOWN>0);}
