@@ -1,94 +1,79 @@
-import <h7>
-import <proof3d>
+import<h7>
+import<proof3d>
 #define INLINE_INITIALIZATION ON
 #define LOCAL_SCOPES ON
 #define STRICT_LOCAL_SCOPES ON
-module airport {
+module airport{
+  facility ID_CONCH,Q_CONCH;constant int NUM_PROCESSES=3;constant float SHUTDOWN_TIME=8*60;control int SHUTDOWN=0;set(Box) QUEUE[NUM_PROCESSES+1];rn_stream PROCESS_STREAM,LAUNCH_STREAM;class StrStrHashEntry (string(*) in_key,string(*) in_val){string(100) key,val;initial{key=in_key;val=in_val;}};
+  class Hash{set(StrStrHashEntry) ranked(ascending key) dict;procedure st(string(*) key,string(*) val){pointer(StrStrHashEntry) el;el=retrieve StrStrHashEntry(key=key) from dict;if (el==NULL){el=new StrStrHashEntry(key,val);place el into dict;}else{el->val=val;}return;}procedure gt(string(*) key) returning string(100){pointer(StrStrHashEntry) el;el=retrieve StrStrHashEntry(key=key) from dict;return el->val;}};
+  class Box(string(*) in_color,string(*) in_size){Hash options;int id;static int num_boxes;float arrival_time;string(100) mesh;initial{id=++num_boxes;options.st("color",in_color);options.st("size",in_size);options.st("shape","shape");mesh="mesh";}}
+  procedure init_launchers(string(*) fname){filedef infile input name=fname;pointer(Box) box;string(6) color;string(6) size;int median_period;forever{read newline file=infile end=done (color,size,median_period);activate new Launcher(new Box(color,size),median_period);}done:;}
 
-  facility ID_CONCH, Q_CONCH; constant int NUM_PROCESSES = 3; constant float SHUTDOWN_TIME = 8 * 60; control int SHUTDOWN = 0; set(Box) QUEUE[NUM_PROCESSES + 1]; rn_stream PROCESS_STREAM, LAUNCH_STREAM; class StrStrHashEntry (string(*) in_key, string(*) in_val) { string(100) key, val; initial { key = in_key; val = in_val; } };
-  class Hash { set(StrStrHashEntry) ranked(ascending key) dict; procedure st(string(*) key, string(*) val) { pointer(StrStrHashEntry) el; el = retrieve StrStrHashEntry(key=key) from dict; if (el == NULL) { el = new StrStrHashEntry(key, val); place el into dict; } else { el -> val = val; } return; } procedure gt(string(*) key) returning string(100) { pointer(StrStrHashEntry) el; el = retrieve StrStrHashEntry(key=key) from dict; return el -> val; } };
-  class Box(string(*) in_color, string(*) in_size) { Hash options; int id; static int num_boxes; float arrival_time; string(100) mesh; initial { id = ++num_boxes; options.st("color", in_color); options.st("size", in_size); options.st("shape", "shape"); mesh = "mesh"; } }
-  procedure init_launchers(string(*) fname) { filedef infile input name = fname; pointer(Box) box; string(6) color; string(6) size; int median_period; forever { read newline file=infile end=done (color, size, median_period); activate new Launcher(new Box(color, size), median_period); } done:; }
-
-  class Launcher(pointer(Box) in_template_box, float in_median_creation_period) {
-    pointer(Box) template_box; pointer(Box) clone_box; float median_creation_period; initial{ median_creation_period = in_median_creation_period; template_box = in_template_box; }
-    procedure run() {
-      while (time < SHUTDOWN_TIME) {
-        advance rv_expo(LAUNCH_STREAM, median_creation_period);
+  class Launcher(pointer(Box) in_template_box,float in_median_creation_period){
+    pointer(Box) template_box;pointer(Box) clone_box;float median_creation_period;initial{ median_creation_period=in_median_creation_period;template_box=in_template_box;}
+    procedure run(){
+      while (time<SHUTDOWN_TIME){
+        advance rv_expo(LAUNCH_STREAM,median_creation_period);
 				seize Q_CONCH;
-          clone_box = new Box(template_box -> options.gt("color"), template_box -> options.gt("size"));
-          PA_Create clone_box -> mesh clone_box -> id;
-          PA_Place clone_box -> id on "QUEUE1";
+          clone_box=new Box(template_box->options.gt("color"),template_box->options.gt("size"));
+          PA_Create clone_box->mesh clone_box->id;
+          PA_Place clone_box->id on "QUEUE1";
           place clone_box into QUEUE[1];
 				release Q_CONCH;
       }
-      SHUTDOWN = 1;
+      SHUTDOWN=1;
     }
-    actions { run(); }
+    actions{run();}
   }
 
-  class Processor(string(*) in_process_name, float in_median_duration) {
-    static int num_processors;
-    int processor_id;
-    float median_duration;
-    string(100) process_name;
-    control boolean busy;
-    initial {
-      processor_id = ++num_processors;
-      median_duration = in_median_duration;
-      process_name = in_process_name;
-      busy = FALSE;
-    }
-		procedure process(pointer(Box) box) {
-      busy = TRUE;
-			PA_Place box -> id on "PROCESSOR" cat ascii(processor_id + 48);
-      advance rv_expo(PROCESS_STREAM, median_duration);
-      box -> mesh = process_name cat box -> mesh;
-      PA_Destroy box -> id;
-      PA_Create box -> mesh box -> id;
-			PA_Place box -> id on "PROCESSOREXIT" cat ascii(processor_id + 48);
+  class Processor(string(*) in_process_name,float in_median_duration,int in_out_q){
+    static int num_processors;int processor_id,out_q;float median_duration;string(100) process_name;control boolean busy;pointer(Box) mybox;
+    initial{processor_id=++num_processors;out_q=in_out_q;median_duration=in_median_duration;process_name=in_process_name;busy=FALSE;}
+    procedure receive(pointer(Box) box){mybox=box;}
+		procedure process(){
+      advance 1;
+			PA_Place mybox->id on "PROCESSOR" cat ascii(processor_id+48);
+      advance rv_expo(PROCESS_STREAM,median_duration);
+      mybox->mesh=process_name cat mybox->mesh;
+      PA_Destroy mybox->id;
+      PA_Create mybox->mesh mybox->id;
+			PA_Place mybox->id on "PROCESSOREXIT" cat ascii(processor_id+48);
       advance 0.5;
-      busy = FALSE;
+      seize Q_CONCH;
+        place mybox into QUEUE[out_q];
+      release Q_CONCH;
+      PA_Place mybox->id on "QUEUE" cat ascii(out_q+48);
+      busy=FALSE;
 		}
-    actions {}
+    actions{process();}
   }
 
-  class ProcessingUnit(int in_num_processors, string(*) in_selector, string(*) in_options[*], int in_median_durations[*]) {
-    static int num_units;
-    int id;
-    string(100) selector;
+  class ProcessingUnit(int in_num_processors,string(*) in_selector,string(*) in_options[*],int in_median_durations[*]){
+    static int num_units;int id;string(100) selector;
     set(Processor) ranked(descending process_name) processors;
-    initial {
-      id = ++num_units;
-      selector = in_selector;
-      int i; for (i = 1; i <= array_upper_bound(in_options, 1); i++) { place new Processor(in_options[i], in_median_durations[i]) into processors; }
+    initial{
+      id=++num_units;selector=in_selector;int i;for (i=1;i<=array_upper_bound(in_options,1);i++){place new Processor(in_options[i],in_median_durations[i],id+1) into processors;}
     }
-    procedure run() {
+    procedure run(){
       pointer(Processor) processor;
-      forever {
-        wait until (QUEUE[id].size > 0);
-        processor = retrieve Processor(process_name = (first Box in QUEUE[id]) -> options.gt(selector)) from processors;
-        wait until (processor -> busy == FALSE);
-        //fork {
-          pointer(Box) box;
-          seize Q_CONCH;
-            box = first Box in QUEUE[id];
-          release Q_CONCH;
-          remove box from QUEUE[id];
-          processor -> process(box);
-          place box into QUEUE[id + 1];
-          PA_Place box -> id on "QUEUE" cat ascii(id + 1 + 48);
-        //  terminate;
-        //}
+      forever{
+        wait until (QUEUE[id].size>0);
+        seize Q_CONCH;
+        processor=retrieve Processor(process_name=(first Box in QUEUE[id])->options.gt(selector)) from processors;
+        release Q_CONCH;
+        wait until (processor->busy==FALSE);
+        processor->busy=TRUE;
+        pointer(Box) box=NULL;
+        seize Q_CONCH;
+          box=first Box in QUEUE[id];
+        release Q_CONCH;
+        remove box from QUEUE[id];
+        processor->receive(box);
+        activate processor;
       }
     }
-    procedure ship() { pointer(Box) box; forever { wait until (QUEUE[id].size > 0); box = first Box in QUEUE[id]; remove box from QUEUE[id]; PA_Destroy box -> id; } }
-    actions { if (id <= NUM_PROCESSES) { run(); } else { ship(); } }
+    procedure ship(){pointer(Box) box;forever{wait until (QUEUE[id].size>0);box=first Box in QUEUE[id];remove box from QUEUE[id];advance 1;PA_Destroy box->id;}}
+    actions{if (id<=NUM_PROCESSES){run();}else{ship();}}
   }
-
-  procedure main(int argc, string(*) argv[*]) {
-    PA_ATF argv[2]; init_launchers(argv[1]); string(6) colors[3] = {"red", "green", "blue"}; string(6) shapes[1] = {"shape"}; string(6) sizes[2] = {"big", "small"}; int durations1[3] = {7, 7, 7}; int durations2[1] = {5}; int durations3[2] = {6, 6};
-    activate new ProcessingUnit(3, "color", colors, durations1); //activate new ProcessingUnit(1, "shape", shapes, durations2); activate new ProcessingUnit(2, "size", sizes, durations3); activate new ProcessingUnit(0, "shape", shapes, durations2);
-    wait until(SHUTDOWN > 0);
-  }
+  procedure main(int argc,string(*) argv[*]){PA_ATF argv[2];init_launchers(argv[1]);string(6) colors[3]={"red","green","blue"};string(6) shapes[1]={"shape"};string(6) sizes[2]={"big","small"};int durations1[3]={7,7,7};int durations2[1]={5};int durations3[2]={6,6};activate new ProcessingUnit(3,"color",colors,durations1);activate new ProcessingUnit(1,"shape",shapes,durations2);activate new ProcessingUnit(2,"size",sizes,durations3);activate new ProcessingUnit(0,"shape",shapes,durations2);wait until(SHUTDOWN>0);}
 }

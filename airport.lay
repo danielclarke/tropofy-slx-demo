@@ -57,18 +57,6 @@ Arc #24 1 12 -19 0 90 180 normal 0 0 1
 Line #25 12 -18 0 18 -18 0
 Arc #26 1 18 -19 0 0 90 normal 0 0 1
 Arc #27 1 20 -19 0 270 180 normal 0 0 1
-Arc #28 1 30 -19 0 -90 0 normal 0 0 1
-Arc #29 1 32 -19 0 180 90 normal 0 0 1
-Line #30 31 -19 0 31 -17 0
-Arc #31 1 32 -17 0 180 90 normal 0 0 1
-Arc #32 1 30 -21 0 90 0 normal 0 0 1
-Arc #33 1 32 -21 0 180 270 normal 0 0 1
-Line #34 31 -21 0 31 -23 0
-Arc #35 1 32 -23 0 180 270 normal 0 0 1
-Line #36 32 -18 0 34 -18 0
-Line #37 32 -16 0 34 -16 0
-Line #38 32 -22 0 34 -22 0
-Line #39 32 -24 0 34 -24 0
 
 Define Path QUEUE1 Accumulating LEAPOK Speed 10
 Segment #1 0 0 0 10 0 0 10
@@ -145,32 +133,6 @@ End
 
 Define Path QUEUE4 Accumulating LEAPOK Speed 10
 Segment #9 20 -20 0 30 -20 0 10
-End
-
-Define Path PROCESSOR7 Speed 8.28
-Segment #28 30 -20 0 31 -19 0 1.57 CCW
-Segment #29 31 -19 0 32 -18 0 1.57 CW
-Segment #36 32 -18 0 34 -18 0
-End
-
-Define Path PROCESSOR8 Speed 10.28
-Segment #28 30 -20 0 31 -19 0 1.57 CCW
-Segment #30 31 -19 0 31 -17 0 2
-Segment #31 31 -17 0 32 -16 0 1.57 CW
-Segment #37 32 -16 0 34 -16 0
-End
-
-Define Path PROCESSOR9 Speed 8.28
-Segment #32 30 -20 0 31 -21 0 1.57 CW
-Segment #33 31 -21 0 32 -22 0 1.57 CCW
-Segment #38 32 -22 0 34 -22 0
-End
-
-Define Path PROCESSOR10 Speed 10.28
-Segment #32 30 -20 0 31 -21 0 1.57 CW
-Segment #34 31 -21 0 31 -23 0 2
-Segment #35 31 -23 0 32 -24 0 1.57 CCW
-Segment #39 32 -24 0 34 -24 0
 End
 
 End
