@@ -15,19 +15,19 @@ Define color F31 0.6471 0.7255 0.8471
 Define color L3 0.7804 0.8667 0.8784
 Define color L6 0.702 0.6941 0.7569
 
-Define Class mesh Camera  0 0 0 0 0 0 0 Import "YellowBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
-Define Class redmesh Camera  0 0 0 0 0 0 0 Import "RedBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
-Define Class greenmesh Camera  0 0 0 0 0 0 0 Import "GreenBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
-Define Class bluemesh Camera  0 0 0 0 0 0 0 Import "BlueBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
-Define Class shaperedmesh Camera  0 0 0 0 0 0 0 Import "RedBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
-Define Class shapegreenmesh Camera  0 0 0 0 0 0 0 Import "GreenBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
-Define Class shapebluemesh Camera  0 0 0 0 0 0 0 Import "BlueBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
-Define Class bigshaperedmesh Camera  0 0 0 0 0 0 0 Import "RedBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
-Define Class bigshapegreenmesh Camera  0 0 0 0 0 0 0 Import "GreenBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
-Define Class bigshapebluemesh Camera  0 0 0 0 0 0 0 Import "BlueBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
-Define Class smallshaperedmesh Camera  0 0 0 0 0 0 0 Import "RedBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
-Define Class smallshapegreenmesh Camera  0 0 0 0 0 0 0 Import "GreenBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
-Define Class smallshapebluemesh Camera  0 0 0 0 0 0 0 Import "BlueBox.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
+Define Class mesh Camera  0 0 0 0 0 0 0 Import "xfiles/mesh.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
+Define Class redmesh Camera  0 0 0 0 0 0 0 Import "xfiles/redmesh.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
+Define Class greenmesh Camera  0 0 0 0 0 0 0 Import "xfiles/greenmesh.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
+Define Class bluemesh Camera  0 0 0 0 0 0 0 Import "xfiles/bluemesh.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
+Define Class shaperedmesh Camera  0 0 0 0 0 0 0 Import "xfiles/shaperedmesh.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
+Define Class shapegreenmesh Camera  0 0 0 0 0 0 0 Import "xfiles/shapegreenmesh.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
+Define Class shapebluemesh Camera  0 0 0 0 0 0 0 Import "xfiles/shapebluemesh.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
+Define Class bigshaperedmesh Camera  0 0 0 0 0 0 0 Import "xfiles/bigshaperedmesh.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
+Define Class bigshapegreenmesh Camera  0 0 0 0 0 0 0 Import "xfiles/bigshapegreenmesh.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
+Define Class bigshapebluemesh Camera  0 0 0 0 0 0 0 Import "xfiles/bigshapebluemesh.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
+Define Class smallshaperedmesh Camera  0 0 0 0 0 0 0 Import "xfiles/smallshaperedmesh.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
+Define Class smallshapegreenmesh Camera  0 0 0 0 0 0 0 Import "xfiles/smallshapegreenmesh.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
+Define Class smallshapebluemesh Camera  0 0 0 0 0 0 0 Import "xfiles/smallshapebluemesh.x" Scale 0.5 0.5 0.5 Reposition 0 0 1 Rotation 90 180 0 Directional Clearance 1 1 RGP -1
 
 Color White
 Line #1 0 0 0 10 0 0
