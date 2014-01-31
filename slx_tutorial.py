@@ -24,8 +24,6 @@ class Box(DataSetMixin):
     size = Column(Text, nullable=False)
     mean_arrival_period = Column(Float, nullable=False)
 
-    #__table_args__ = (UniqueConstraint('color', 'data_set_id'),)
-
 class ExecuteSLX(ExecuteFunction):
     def get_button_text(self):
         return "Solve Simple Queueing Problem with SLX"
@@ -113,7 +111,6 @@ def call_local_solver(data_set):
     data_set.send_progress_message('4. AVI generated \n')
 
 def write_slx_box_dat_file(data_set, box_dat_file_path):
-
     data = get_box_table_data(data_set)
     write_dat_file(data, box_dat_file_path)
     return box_dat_file_path
@@ -137,7 +134,7 @@ def invoke_slx_simulation(data_set, box_dat_file_path, trace_file_path):
     out, _ = p.communicate()
 
 def invoke_p3d_animation(data_set, layout_file_path, trace_file_path, avi_file_path):
-    p = subprocess.Popen(["c:\Wolverine\P3D\sp3d", "/MakeAVI", "1024", "768", "0", "360",
+    p = subprocess.Popen(["c:\Wolverine\P3D\sp3d", "/MakeAVI", "1280", "720", "0", "360",
                           layout_file_path, trace_file_path, avi_file_path],
         stdout=subprocess.PIPE,
         cwd=data_set.app.app_folder_path)
