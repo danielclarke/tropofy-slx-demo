@@ -56,7 +56,6 @@ place 8 on PROCESSOREXIT6
 ti 28.4196
 place 8 on QUEUE4 
 ti 29.4196
-destroy 8
 place 9 on PROCESSOR6 
 ti 32.6071
 destroy 7
@@ -73,8 +72,6 @@ create smallshapebluemesh 9
 place 9 on PROCESSOREXIT6 
 ti 35.9590
 place 9 on QUEUE4 
-ti 36.9590
-destroy 9
 ti 40.8344
 destroy 10
 create greenmesh 10
@@ -107,8 +104,6 @@ place 7 on QUEUE4
 ti 53.5490
 create mesh 12
 place 12 on QUEUE1 
-ti 53.8073
-destroy 7
 ti 54.5490
 place 12 on PROCESSOR3 
 ti 54.9314
@@ -151,16 +146,12 @@ create bigshapegreenmesh 11
 place 11 on PROCESSOREXIT5 
 ti 65.2267
 place 11 on QUEUE4 
-ti 66.2267
-destroy 11
 ti 66.4642
 destroy 10
 create smallshapegreenmesh 10
 place 10 on PROCESSOREXIT6 
 ti 66.9642
 place 10 on QUEUE4 
-ti 67.9642
-destroy 10
 ti 71.2168
 create mesh 15
 place 15 on QUEUE1 
@@ -186,8 +177,6 @@ ti 77.2815
 place 13 on PROCESSOR4 
 ti 77.2944
 place 12 on QUEUE4 
-ti 78.2944
-destroy 12
 ti 84.9758
 create mesh 16
 place 16 on QUEUE1 
@@ -205,8 +194,6 @@ create smallshapegreenmesh 13
 place 13 on PROCESSOREXIT6 
 ti 89.2277
 place 13 on QUEUE4 
-ti 90.2277
-destroy 13
 ti 92.7093
 destroy 14
 create bluemesh 14
@@ -239,8 +226,6 @@ place 14 on QUEUE4
 ti 98.1052
 place 16 on PROCESSOR3 
 place 15 on PROCESSOR4 
-ti 98.4973
-destroy 14
 ti 102.9825
 destroy 15
 create shapebluemesh 15
@@ -294,7 +279,6 @@ place 15 on QUEUE4
 ti 128.0886
 place 18 on PROCESSOR2 
 ti 128.9773
-destroy 15
 place 16 on PROCESSOR6 
 ti 129.1529
 destroy 18
@@ -311,7 +295,6 @@ place 16 on QUEUE4
 ti 130.6529
 place 18 on PROCESSOR4 
 ti 131.4403
-destroy 16
 place 17 on PROCESSOR6 
 ti 134.7303
 destroy 17
@@ -325,8 +308,6 @@ create shapegreenmesh 18
 place 18 on PROCESSOREXIT4 
 ti 136.1969
 place 18 on QUEUE3 
-ti 136.2303
-destroy 17
 ti 137.1969
 place 18 on PROCESSOR5 
 ti 142.6201
@@ -353,8 +334,6 @@ ti 145.5673
 place 20 on PROCESSOR2 
 ti 145.6300
 place 18 on QUEUE4 
-ti 146.6300
-destroy 18
 ti 148.3518
 destroy 20
 create greenmesh 20
@@ -384,16 +363,12 @@ create bigshapegreenmesh 20
 place 20 on PROCESSOREXIT5 
 ti 163.7982
 place 20 on QUEUE4 
-ti 164.7982
-destroy 20
 ti 170.2149
 destroy 19
 create smallshapegreenmesh 19
 place 19 on PROCESSOREXIT6 
 ti 170.7149
 place 19 on QUEUE4 
-ti 171.7149
-destroy 19
 ti 174.2277
 create mesh 21
 place 21 on QUEUE1 
@@ -449,8 +424,6 @@ ti 207.7186
 place 21 on QUEUE4 
 ti 207.9205
 place 22 on QUEUE3 
-ti 208.7186
-destroy 21
 ti 208.9205
 place 22 on PROCESSOR5 
 ti 210.7732
@@ -459,8 +432,6 @@ create bigshapebluemesh 22
 place 22 on PROCESSOREXIT5 
 ti 211.2732
 place 22 on QUEUE4 
-ti 212.2732
-destroy 22
 ti 224.4607
 create mesh 26
 place 26 on QUEUE1 
@@ -503,8 +474,6 @@ ti 237.3427
 place 23 on QUEUE4 
 ti 237.8069
 place 26 on QUEUE2 
-ti 238.3427
-destroy 23
 ti 239.1089
 create mesh 27
 place 27 on QUEUE1 
@@ -540,7 +509,6 @@ place 24 on PROCESSOREXIT5
 ti 246.7285
 place 24 on QUEUE4 
 ti 247.7285
-destroy 24
 place 26 on PROCESSOR5 
 ti 249.2644
 destroy 28
@@ -601,7 +569,6 @@ place 26 on PROCESSOREXIT5
 ti 261.8036
 place 26 on QUEUE4 
 ti 262.8036
-destroy 26
 place 28 on PROCESSOR5 
 ti 269.2905
 destroy 28
@@ -610,7 +577,6 @@ place 28 on PROCESSOREXIT5
 ti 269.7905
 place 28 on QUEUE4 
 ti 270.7905
-destroy 28
 place 27 on PROCESSOR5 
 place 25 on PROCESSOR6 
 ti 272.6913
@@ -619,16 +585,12 @@ create smallshapebluemesh 25
 place 25 on PROCESSOREXIT6 
 ti 273.1913
 place 25 on QUEUE4 
-ti 274.1913
-destroy 25
 ti 274.6707
 destroy 27
 create bigshaperedmesh 27
 place 27 on PROCESSOREXIT5 
 ti 275.1707
 place 27 on QUEUE4 
-ti 276.1707
-destroy 27
 ti 279.2425
 destroy 29
 create shaperedmesh 29
@@ -648,8 +610,6 @@ create smallshaperedmesh 29
 place 29 on PROCESSOREXIT6 
 ti 292.3267
 place 29 on QUEUE4 
-ti 293.3267
-destroy 29
 ti 294.1114
 create mesh 31
 place 31 on QUEUE1 
@@ -682,8 +642,6 @@ ti 300.8421
 place 30 on QUEUE4 
 ti 300.9826
 place 31 on QUEUE2 
-ti 301.8421
-destroy 30
 ti 301.9826
 place 31 on PROCESSOR4 
 ti 305.6188
@@ -710,8 +668,6 @@ create smallshapegreenmesh 31
 place 31 on PROCESSOREXIT6 
 ti 311.1316
 place 31 on QUEUE4 
-ti 312.1316
-destroy 31
 ti 312.3861
 destroy 32
 create redmesh 32
@@ -734,8 +690,6 @@ create smallshaperedmesh 32
 place 32 on PROCESSOREXIT6 
 ti 317.6017
 place 32 on QUEUE4 
-ti 318.6017
-destroy 32
 ti 319.6454
 create mesh 34
 place 34 on QUEUE1 
@@ -807,8 +761,6 @@ ti 338.6177
 place 33 on QUEUE4 
 ti 338.9610
 place 34 on QUEUE3 
-ti 339.6177
-destroy 33
 ti 339.9610
 place 35 on PROCESSOR4 
 place 34 on PROCESSOR5 
@@ -827,16 +779,12 @@ create smallshapegreenmesh 35
 place 35 on PROCESSOREXIT6 
 ti 344.1580
 place 35 on QUEUE4 
-ti 345.1580
-destroy 35
 ti 348.1540
 destroy 34
 create bigshapebluemesh 34
 place 34 on PROCESSOREXIT5 
 ti 348.6540
 place 34 on QUEUE4 
-ti 349.6540
-destroy 34
 ti 355.7100
 destroy 36
 create shaperedmesh 36
@@ -860,16 +808,12 @@ create smallshapegreenmesh 37
 place 37 on PROCESSOREXIT6 
 ti 359.5165
 place 37 on QUEUE4 
-ti 360.5165
-destroy 37
 ti 368.1081
 destroy 36
 create bigshaperedmesh 36
 place 36 on PROCESSOREXIT5 
 ti 368.6081
 place 36 on QUEUE4 
-ti 369.6081
-destroy 36
 ti 370.0366
 create mesh 38
 place 38 on QUEUE1 
@@ -915,8 +859,6 @@ ti 384.3827
 place 39 on PROCESSOR4 
 ti 384.4317
 place 40 on PROCESSOR2 
-ti 384.9428
-destroy 38
 ti 385.7143
 destroy 39
 create shaperedmesh 39
@@ -953,10 +895,6 @@ ti 395.5900
 place 40 on QUEUE4 
 ti 395.6851
 place 39 on QUEUE4 
-ti 396.5900
-destroy 40
-ti 397.5900
-destroy 39
 ti 402.9099
 create mesh 41
 place 41 on QUEUE1 
@@ -1033,8 +971,6 @@ ti 420.5320
 destroy 44
 create shapegreenmesh 44
 place 44 on PROCESSOREXIT4 
-ti 420.7311
-destroy 42
 ti 421.0320
 place 44 on QUEUE3 
 ti 422.0320
@@ -1052,8 +988,6 @@ ti 423.7119
 place 44 on QUEUE4 
 ti 424.1109
 place 43 on QUEUE3 
-ti 424.7119
-destroy 44
 ti 425.1109
 place 45 on PROCESSOR4 
 place 43 on PROCESSOR6 
@@ -1072,8 +1006,6 @@ create mesh 48
 place 48 on QUEUE1 
 ti 429.6338
 place 45 on QUEUE3 
-ti 430.3586
-destroy 43
 ti 430.6338
 place 45 on PROCESSOR5 
 ti 433.9635
@@ -1131,8 +1063,6 @@ ti 442.1398
 place 47 on QUEUE2 
 ti 442.6270
 place 48 on QUEUE2 
-ti 442.9299
-destroy 41
 ti 443.2523
 create mesh 50
 place 50 on QUEUE1 
@@ -1144,8 +1074,6 @@ create bigshapebluemesh 45
 place 45 on PROCESSOREXIT5 
 ti 450.9656
 place 45 on QUEUE4 
-ti 451.9656
-destroy 45
 ti 459.8411
 destroy 46
 create shaperedmesh 46
@@ -1161,8 +1089,6 @@ create bigshaperedmesh 46
 place 46 on PROCESSOREXIT5 
 ti 463.8339
 place 46 on QUEUE4 
-ti 464.8339
-destroy 46
 ti 469.7070
 destroy 50
 create greenmesh 50
@@ -1193,8 +1119,6 @@ create mesh 51
 place 51 on QUEUE1 
 ti 474.9662
 place 47 on QUEUE3 
-ti 475.1786
-destroy 49
 ti 475.5950
 place 51 on PROCESSOR2 
 ti 475.9662
@@ -1212,8 +1136,6 @@ ti 479.3164
 place 51 on QUEUE2 
 ti 479.5270
 place 47 on QUEUE4 
-ti 480.5270
-destroy 47
 ti 481.1631
 destroy 48
 create shapebluemesh 48
@@ -1238,16 +1160,12 @@ create bigshapebluemesh 48
 place 48 on PROCESSOREXIT5 
 ti 487.7076
 place 48 on QUEUE4 
-ti 488.7076
-destroy 48
 ti 492.8908
 destroy 50
 create smallshapegreenmesh 50
 place 50 on PROCESSOREXIT6 
 ti 493.3908
 place 50 on QUEUE4 
-ti 494.3908
-destroy 50
 ti 497.5259
 destroy 51
 create shapegreenmesh 51

@@ -1,5 +1,5 @@
 *3D
-Define View "(Home)" Dynamic CameraSphere 15 -13 0 44 60 90 0 Lighting -0.1924 -0.1924 -0.9623 Ambient 0 0 0 Grid Size 1 10 Speed 5
+Define View "(Home)" Dynamic CameraSphere 15 -15 3 30 30 90 0 Lighting -0.1924 -0.1924 -0.9623 Ambient 0 0 0 Grid Size 1 10 Speed 5
 
 Define color Backdrop 0 0 0
 Define color Blue 0 0 0.6667
@@ -59,6 +59,8 @@ Arc #26 1 18 -19 0 0 90 normal 0 0 1
 Arc #27 1 20 -19 0 270 180 normal 0 0 1
 Arc #28 5 30 -25 0 -90 90 normal 0 0 1
 Line #29 30 -30 0 0 -30 0
+Arc #30 2.5 0 -27.5 0 90 270 normal 0 0 1
+Line #31 0 -25 0 25 -25 0
 
 Define Path QUEUE1 Accumulating LEAPOK Speed 10
 Segment #1 0 0 0 10 0 0 10
@@ -137,6 +139,8 @@ Define Path QUEUE4 Accumulating LEAPOK Speed 10
 Segment #9 20 -20 0 30 -20 0 10
 Segment #28 30 -20 0 30 -30 0 15.708 CW
 Segment #29 30 -30 0 0 -30 0 30
+Segment #30 0 -30 0 0 -25 0 7.85 CW
+Segment #31 0 -25 0 25 -25 0 25
 End
 
 End
