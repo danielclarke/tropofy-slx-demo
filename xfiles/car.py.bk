@@ -1,0 +1,22 @@
+from solid import *
+import solid.utils
+from math import *
+
+SEGMENTS = 16
+
+dim_body = [50.0, 50.0, 30.0]
+dim_hood = [30.0, 50.0, 15.0]
+dim_window = [sqrt(2 * ((dim_body[2]-dim_hood[2]) ** 2)), dim_body[1], sqrt(2 * ((dim_body[2]-dim_hood[2]) ** 2))]
+dim_car = [dim_body[0] + dim_hood[0], dim_body[1], dim_body[2]]
+dim_wheel = [10.0, 10.0]
+dim_wheel_arch = [dim_wheel[0] * 1.2, dim_body[1] * 1.1]
+
+body = translate([0, 0, dim_body[2]/2])(cube(dim_body, center=True))
+hood = translate([dim_body[0]/2+dim_hood[0]/2, 0, dim_hood[2]/2])(cube(dim_hood, center=True))
+window = translate([dim_body[0]/2, 0, dim_hood[2]])(rotate([0, 45, 0])(cube(dim_window, center=True)))
+back_wheel_arch = translate([-dim_body[0]/2 + 1.2 * dim_wheel_arch[0], dim_wheel_arch[1]/2, 0])(rotate([90, 0, 0])(cylinder(dim_wheel_arch[0], dim_wheel_arch[1])))
+front_wheel_arch = translate([-dim_body[0]/2 + dim_car[0] - 1.2 * dim_wheel_arch[0], dim_wheel_arch[1]/2, 0])(rotate([90, 0, 0])(cylinder(dim_wheel_arch[0], dim_wheel_arch[1])))
+
+car = translate([-dim_car[0]/2 + dim_body[0]/2, 0, 0])(body + hood + window + back_wheel_arch + front_wheel_arch)
+
+scad_render_to_file(car, "car.scad", file_header='$fn = %s;'%SEGMENTS)

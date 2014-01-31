@@ -1,0 +1,1129 @@
+ti 2.1293
+create mesh 7
+place 7 on QUEUE1 
+place 7 on PROCESSOR2 
+ti 5.9784
+create mesh 8
+place 8 on QUEUE1 
+place 8 on PROCESSOR1 
+ti 9.9154
+create mesh 9
+place 9 on QUEUE1 
+place 9 on PROCESSOR3 
+ti 10.1073
+destroy 8
+create redmesh 8
+place 8 on PROCESSOREXIT1 
+ti 10.6073
+place 8 on QUEUE2 
+place 8 on PROCESSOR4 
+ti 13.6394
+destroy 8
+create shaperedmesh 8
+place 8 on PROCESSOREXIT4 
+ti 14.1394
+place 8 on QUEUE3 
+place 8 on PROCESSOR6 
+ti 17.7855
+destroy 9
+create bluemesh 9
+place 9 on PROCESSOREXIT3 
+ti 18.2855
+place 9 on QUEUE2 
+place 9 on PROCESSOR4 
+ti 22.3837
+destroy 9
+create shapebluemesh 9
+place 9 on PROCESSOREXIT4 
+ti 22.8837
+place 9 on QUEUE3 
+ti 23.0153
+create mesh 10
+place 10 on QUEUE1 
+ti 24.9196
+destroy 8
+create smallshaperedmesh 8
+place 8 on PROCESSOREXIT6 
+ti 25.4196
+place 8 on QUEUE4 
+destroy 8
+place 9 on PROCESSOR6 
+ti 26.8743
+create mesh 11
+place 11 on QUEUE1 
+ti 31.4590
+destroy 9
+create smallshapebluemesh 9
+place 9 on PROCESSOREXIT6 
+ti 31.6071
+destroy 7
+create greenmesh 7
+place 7 on PROCESSOREXIT2 
+ti 31.9590
+place 9 on QUEUE4 
+destroy 9
+ti 32.1071
+place 7 on QUEUE2 
+place 10 on PROCESSOR2 
+place 7 on PROCESSOR4 
+ti 38.8344
+destroy 10
+create greenmesh 10
+place 10 on PROCESSOREXIT2 
+ti 39.3344
+place 10 on QUEUE2 
+place 11 on PROCESSOR2 
+ti 41.4030
+destroy 11
+create greenmesh 11
+place 11 on PROCESSOREXIT2 
+ti 41.9030
+place 11 on QUEUE2 
+ti 48.2113
+destroy 7
+create shapegreenmesh 7
+place 7 on PROCESSOREXIT4 
+ti 48.7113
+place 7 on QUEUE3 
+place 10 on PROCESSOR4 
+place 7 on PROCESSOR5 
+ti 49.3073
+destroy 7
+create bigshapegreenmesh 7
+place 7 on PROCESSOREXIT5 
+ti 49.8073
+place 7 on QUEUE4 
+destroy 7
+ti 51.9314
+destroy 10
+create shapegreenmesh 10
+place 10 on PROCESSOREXIT4 
+ti 52.4314
+place 10 on QUEUE3 
+place 11 on PROCESSOR4 
+place 10 on PROCESSOR6 
+ti 53.5490
+create mesh 12
+place 12 on QUEUE1 
+place 12 on PROCESSOR3 
+ti 55.1904
+destroy 11
+create shapegreenmesh 11
+place 11 on PROCESSOREXIT4 
+ti 55.2125
+create mesh 13
+place 13 on QUEUE1 
+place 13 on PROCESSOR2 
+ti 55.6904
+place 11 on QUEUE3 
+place 11 on PROCESSOR5 
+ti 62.6627
+destroy 12
+create bluemesh 12
+place 12 on PROCESSOREXIT3 
+ti 63.1627
+place 12 on QUEUE2 
+place 12 on PROCESSOR4 
+ti 63.3572
+create mesh 14
+place 14 on QUEUE1 
+place 14 on PROCESSOR3 
+ti 63.6903
+destroy 14
+create bluemesh 14
+place 14 on PROCESSOREXIT3 
+ti 64.1903
+place 14 on QUEUE2 
+ti 66.9175
+destroy 13
+create greenmesh 13
+place 13 on PROCESSOREXIT2 
+ti 67.4175
+place 13 on QUEUE2 
+ti 69.2048
+destroy 10
+create smallshapegreenmesh 10
+place 10 on PROCESSOREXIT6 
+ti 69.7048
+place 10 on QUEUE4 
+destroy 10
+ti 71.2168
+create mesh 15
+place 15 on QUEUE1 
+place 15 on PROCESSOR3 
+ti 72.1835
+destroy 15
+create bluemesh 15
+place 15 on PROCESSOREXIT3 
+ti 72.6835
+place 15 on QUEUE2 
+ti 73.1874
+destroy 12
+create shapebluemesh 12
+place 12 on PROCESSOREXIT4 
+ti 73.6874
+place 12 on QUEUE3 
+place 14 on PROCESSOR4 
+place 12 on PROCESSOR6 
+ti 75.6620
+destroy 12
+create smallshapebluemesh 12
+place 12 on PROCESSOREXIT6 
+ti 76.1620
+place 12 on QUEUE4 
+destroy 12
+ti 79.9922
+destroy 11
+create bigshapegreenmesh 11
+place 11 on PROCESSOREXIT5 
+ti 80.4922
+place 11 on QUEUE4 
+destroy 11
+ti 81.6589
+destroy 14
+create shapebluemesh 14
+place 14 on PROCESSOREXIT4 
+ti 82.1589
+place 14 on QUEUE3 
+place 13 on PROCESSOR4 
+place 14 on PROCESSOR5 
+ti 82.3269
+destroy 14
+create bigshapebluemesh 14
+place 14 on PROCESSOREXIT5 
+ti 82.8269
+place 14 on QUEUE4 
+destroy 14
+ti 83.8703
+destroy 13
+create shapegreenmesh 13
+place 13 on PROCESSOREXIT4 
+ti 84.3703
+place 13 on QUEUE3 
+place 15 on PROCESSOR4 
+place 13 on PROCESSOR6 
+ti 84.9758
+create mesh 16
+place 16 on QUEUE1 
+place 16 on PROCESSOR3 
+ti 85.3270
+destroy 15
+create shapebluemesh 15
+place 15 on PROCESSOREXIT4 
+ti 85.8270
+place 15 on QUEUE3 
+ti 91.6433
+destroy 13
+create smallshapegreenmesh 13
+place 13 on PROCESSOREXIT6 
+ti 91.8040
+destroy 16
+create bluemesh 16
+place 16 on PROCESSOREXIT3 
+ti 92.1433
+place 13 on QUEUE4 
+destroy 13
+place 15 on PROCESSOR6 
+ti 92.3040
+place 16 on QUEUE2 
+place 16 on PROCESSOR4 
+ti 95.4752
+destroy 16
+create shapebluemesh 16
+place 16 on PROCESSOREXIT4 
+ti 95.9752
+place 16 on QUEUE3 
+ti 115.1381
+destroy 15
+create smallshapebluemesh 15
+place 15 on PROCESSOREXIT6 
+ti 115.6381
+place 15 on QUEUE4 
+destroy 15
+place 16 on PROCESSOR6 
+ti 117.1947
+destroy 16
+create smallshapebluemesh 16
+place 16 on PROCESSOREXIT6 
+ti 117.6947
+place 16 on QUEUE4 
+destroy 16
+ti 119.4311
+create mesh 17
+place 17 on QUEUE1 
+place 17 on PROCESSOR3 
+ti 121.9669
+destroy 17
+create bluemesh 17
+place 17 on PROCESSOREXIT3 
+ti 122.4669
+place 17 on QUEUE2 
+place 17 on PROCESSOR4 
+ti 123.2272
+destroy 17
+create shapebluemesh 17
+place 17 on PROCESSOREXIT4 
+ti 123.7272
+place 17 on QUEUE3 
+place 17 on PROCESSOR6 
+ti 124.6902
+destroy 17
+create smallshapebluemesh 17
+place 17 on PROCESSOREXIT6 
+ti 125.1902
+place 17 on QUEUE4 
+destroy 17
+ti 127.0886
+create mesh 18
+place 18 on QUEUE1 
+place 18 on PROCESSOR2 
+ti 134.1501
+destroy 18
+create greenmesh 18
+place 18 on PROCESSOREXIT2 
+ti 134.6501
+place 18 on QUEUE2 
+place 18 on PROCESSOR4 
+ti 137.3918
+destroy 18
+create shapegreenmesh 18
+place 18 on PROCESSOREXIT4 
+ti 137.8918
+place 18 on QUEUE3 
+place 18 on PROCESSOR5 
+ti 142.6201
+create mesh 19
+place 19 on QUEUE1 
+place 19 on PROCESSOR2 
+ti 142.8885
+destroy 19
+create greenmesh 19
+place 19 on PROCESSOREXIT2 
+ti 143.3885
+place 19 on QUEUE2 
+place 19 on PROCESSOR4 
+ti 144.5673
+create mesh 20
+place 20 on QUEUE1 
+place 20 on PROCESSOR2 
+ti 145.8249
+destroy 18
+create bigshapegreenmesh 18
+place 18 on PROCESSOREXIT5 
+ti 146.3249
+place 18 on QUEUE4 
+destroy 18
+ti 147.3518
+destroy 20
+create greenmesh 20
+place 20 on PROCESSOREXIT2 
+ti 147.8518
+place 20 on QUEUE2 
+ti 148.1988
+destroy 19
+create shapegreenmesh 19
+place 19 on PROCESSOREXIT4 
+ti 148.6988
+place 19 on QUEUE3 
+place 20 on PROCESSOR4 
+place 19 on PROCESSOR6 
+ti 157.7550
+destroy 20
+create shapegreenmesh 20
+place 20 on PROCESSOREXIT4 
+ti 158.2550
+place 20 on QUEUE3 
+place 20 on PROCESSOR5 
+ti 159.2982
+destroy 20
+create bigshapegreenmesh 20
+place 20 on PROCESSOREXIT5 
+ti 159.7982
+place 20 on QUEUE4 
+destroy 20
+ti 167.2149
+destroy 19
+create smallshapegreenmesh 19
+place 19 on PROCESSOREXIT6 
+ti 167.7149
+place 19 on QUEUE4 
+destroy 19
+ti 174.2277
+create mesh 21
+place 21 on QUEUE1 
+place 21 on PROCESSOR3 
+ti 179.9571
+create mesh 22
+place 22 on QUEUE1 
+ti 181.5272
+create mesh 23
+place 23 on QUEUE1 
+ti 195.7773
+destroy 21
+create bluemesh 21
+place 21 on PROCESSOREXIT3 
+ti 196.2773
+place 21 on QUEUE2 
+place 22 on PROCESSOR3 
+place 21 on PROCESSOR4 
+ti 196.7614
+destroy 22
+create bluemesh 22
+place 22 on PROCESSOREXIT3 
+ti 196.9081
+destroy 21
+create shapebluemesh 21
+place 21 on PROCESSOREXIT4 
+ti 197.2614
+place 22 on QUEUE2 
+place 23 on PROCESSOR3 
+ti 197.4081
+place 21 on QUEUE3 
+place 22 on PROCESSOR4 
+place 21 on PROCESSOR6 
+ti 202.5105
+create mesh 24
+place 24 on QUEUE1 
+ti 203.0692
+create mesh 25
+place 25 on QUEUE1 
+ti 204.2186
+destroy 21
+create smallshapebluemesh 21
+place 21 on PROCESSOREXIT6 
+ti 204.4205
+destroy 22
+create shapebluemesh 22
+place 22 on PROCESSOREXIT4 
+ti 204.7186
+place 21 on QUEUE4 
+destroy 21
+ti 204.9205
+place 22 on QUEUE3 
+place 22 on PROCESSOR5 
+ti 206.7732
+destroy 22
+create bigshapebluemesh 22
+place 22 on PROCESSOREXIT5 
+ti 207.2732
+place 22 on QUEUE4 
+destroy 22
+ti 222.3928
+destroy 23
+create bluemesh 23
+place 23 on PROCESSOREXIT3 
+ti 222.8928
+place 23 on QUEUE2 
+place 24 on PROCESSOR3 
+place 23 on PROCESSOR4 
+ti 224.4607
+create mesh 26
+place 26 on QUEUE1 
+ti 227.0618
+destroy 23
+create shapebluemesh 23
+place 23 on PROCESSOREXIT4 
+ti 227.5618
+place 23 on QUEUE3 
+place 23 on PROCESSOR6 
+ti 230.5505
+destroy 24
+create bluemesh 24
+place 24 on PROCESSOREXIT3 
+ti 231.0505
+place 24 on QUEUE2 
+place 25 on PROCESSOR3 
+place 26 on PROCESSOR1 
+place 24 on PROCESSOR4 
+ti 231.8427
+destroy 23
+create smallshapebluemesh 23
+place 23 on PROCESSOREXIT6 
+ti 232.3069
+destroy 26
+create redmesh 26
+place 26 on PROCESSOREXIT1 
+ti 232.3427
+place 23 on QUEUE4 
+destroy 23
+ti 232.8069
+place 26 on QUEUE2 
+ti 235.4660
+destroy 24
+create shapebluemesh 24
+place 24 on PROCESSOREXIT4 
+ti 235.9660
+place 24 on QUEUE3 
+place 26 on PROCESSOR4 
+place 24 on PROCESSOR5 
+ti 239.1089
+create mesh 27
+place 27 on QUEUE1 
+place 27 on PROCESSOR1 
+ti 239.4416
+destroy 27
+create redmesh 27
+place 27 on PROCESSOREXIT1 
+ti 239.9416
+place 27 on QUEUE2 
+ti 240.8674
+create mesh 28
+place 28 on QUEUE1 
+place 28 on PROCESSOR2 
+ti 242.3063
+destroy 24
+create bigshapebluemesh 24
+place 24 on PROCESSOREXIT5 
+ti 242.8063
+place 24 on QUEUE4 
+destroy 24
+ti 244.4329
+destroy 26
+create shaperedmesh 26
+place 26 on PROCESSOREXIT4 
+ti 244.9329
+place 26 on QUEUE3 
+place 27 on PROCESSOR4 
+place 26 on PROCESSOR5 
+ti 245.8331
+create mesh 29
+place 29 on QUEUE1 
+place 29 on PROCESSOR1 
+ti 245.8403
+destroy 28
+create greenmesh 28
+place 28 on PROCESSOREXIT2 
+ti 246.3403
+place 28 on QUEUE2 
+ti 246.4141
+destroy 29
+create redmesh 29
+place 29 on PROCESSOREXIT1 
+ti 246.9141
+place 29 on QUEUE2 
+ti 247.0822
+destroy 26
+create bigshaperedmesh 26
+place 26 on PROCESSOREXIT5 
+ti 247.1963
+destroy 25
+create bluemesh 25
+place 25 on PROCESSOREXIT3 
+ti 247.5822
+place 26 on QUEUE4 
+destroy 26
+ti 247.6963
+place 25 on QUEUE2 
+ti 256.2455
+destroy 27
+create shaperedmesh 27
+place 27 on PROCESSOREXIT4 
+ti 256.7455
+place 27 on QUEUE3 
+place 28 on PROCESSOR4 
+place 27 on PROCESSOR5 
+ti 257.2059
+destroy 27
+create bigshaperedmesh 27
+place 27 on PROCESSOREXIT5 
+ti 257.7059
+place 27 on QUEUE4 
+destroy 27
+ti 258.8668
+destroy 28
+create shapegreenmesh 28
+place 28 on PROCESSOREXIT4 
+ti 259.3668
+place 28 on QUEUE3 
+place 29 on PROCESSOR4 
+place 28 on PROCESSOR5 
+ti 265.8537
+destroy 28
+create bigshapegreenmesh 28
+place 28 on PROCESSOREXIT5 
+ti 266.3537
+place 28 on QUEUE4 
+destroy 28
+ti 279.0489
+destroy 29
+create shaperedmesh 29
+place 29 on PROCESSOREXIT4 
+ti 279.5489
+place 29 on QUEUE3 
+place 25 on PROCESSOR4 
+place 29 on PROCESSOR6 
+ti 281.4498
+destroy 29
+create smallshaperedmesh 29
+place 29 on PROCESSOREXIT6 
+ti 281.6276
+create mesh 30
+place 30 on QUEUE1 
+place 30 on PROCESSOR2 
+ti 281.9498
+place 29 on QUEUE4 
+destroy 29
+ti 282.7825
+destroy 25
+create shapebluemesh 25
+place 25 on PROCESSOREXIT4 
+ti 283.2825
+place 25 on QUEUE3 
+place 25 on PROCESSOR6 
+ti 294.1114
+create mesh 31
+place 31 on QUEUE1 
+ti 294.1125
+destroy 25
+create smallshapebluemesh 25
+place 25 on PROCESSOREXIT6 
+ti 294.5591
+destroy 30
+create greenmesh 30
+place 30 on PROCESSOREXIT2 
+ti 294.6125
+place 25 on QUEUE4 
+destroy 25
+ti 295.0591
+place 30 on QUEUE2 
+place 31 on PROCESSOR2 
+place 30 on PROCESSOR4 
+ti 295.1919
+destroy 30
+create shapegreenmesh 30
+place 30 on PROCESSOREXIT4 
+ti 295.6919
+place 30 on QUEUE3 
+place 30 on PROCESSOR6 
+ti 297.6387
+destroy 30
+create smallshapegreenmesh 30
+place 30 on PROCESSOREXIT6 
+ti 298.1387
+place 30 on QUEUE4 
+destroy 30
+ti 298.7791
+destroy 31
+create greenmesh 31
+place 31 on PROCESSOREXIT2 
+ti 299.2791
+place 31 on QUEUE2 
+place 31 on PROCESSOR4 
+ti 304.8106
+destroy 31
+create shapegreenmesh 31
+place 31 on PROCESSOREXIT4 
+ti 305.3106
+place 31 on QUEUE3 
+place 31 on PROCESSOR6 
+ti 305.6188
+create mesh 32
+place 32 on QUEUE1 
+place 32 on PROCESSOR1 
+ti 307.5058
+destroy 32
+create redmesh 32
+place 32 on PROCESSOREXIT1 
+ti 308.0058
+place 32 on QUEUE2 
+place 32 on PROCESSOR4 
+ti 309.1354
+create mesh 33
+place 33 on QUEUE1 
+place 33 on PROCESSOR3 
+ti 310.2540
+destroy 31
+create smallshapegreenmesh 31
+place 31 on PROCESSOREXIT6 
+ti 310.6131
+destroy 33
+create bluemesh 33
+place 33 on PROCESSOREXIT3 
+ti 310.7540
+place 31 on QUEUE4 
+destroy 31
+ti 311.1131
+place 33 on QUEUE2 
+ti 317.3772
+destroy 32
+create shaperedmesh 32
+place 32 on PROCESSOREXIT4 
+ti 317.8772
+place 32 on QUEUE3 
+place 33 on PROCESSOR4 
+place 32 on PROCESSOR6 
+ti 318.4273
+destroy 33
+create shapebluemesh 33
+place 33 on PROCESSOREXIT4 
+ti 318.9273
+place 33 on QUEUE3 
+ti 319.6454
+create mesh 34
+place 34 on QUEUE1 
+place 34 on PROCESSOR3 
+ti 321.1722
+create mesh 35
+place 35 on QUEUE1 
+place 35 on PROCESSOR2 
+ti 322.7819
+destroy 32
+create smallshaperedmesh 32
+place 32 on PROCESSOREXIT6 
+ti 323.2819
+place 32 on QUEUE4 
+destroy 32
+place 33 on PROCESSOR6 
+ti 326.7369
+create mesh 36
+place 36 on QUEUE1 
+place 36 on PROCESSOR1 
+ti 329.3005
+destroy 33
+create smallshapebluemesh 33
+place 33 on PROCESSOREXIT6 
+ti 329.3898
+destroy 34
+create bluemesh 34
+place 34 on PROCESSOREXIT3 
+ti 329.5308
+destroy 35
+create greenmesh 35
+place 35 on PROCESSOREXIT2 
+ti 329.8005
+place 33 on QUEUE4 
+destroy 33
+ti 329.8898
+place 34 on QUEUE2 
+place 34 on PROCESSOR4 
+ti 330.0308
+place 35 on QUEUE2 
+ti 334.7997
+destroy 34
+create shapebluemesh 34
+place 34 on PROCESSOREXIT4 
+ti 335.2940
+create mesh 37
+place 37 on QUEUE1 
+place 37 on PROCESSOR2 
+ti 335.2997
+place 34 on QUEUE3 
+place 35 on PROCESSOR4 
+place 34 on PROCESSOR5 
+ti 335.4567
+destroy 37
+create greenmesh 37
+place 37 on PROCESSOREXIT2 
+ti 335.4662
+destroy 36
+create redmesh 36
+place 36 on PROCESSOREXIT1 
+ti 335.9567
+place 37 on QUEUE2 
+ti 335.9662
+place 36 on QUEUE2 
+ti 337.0101
+destroy 35
+create shapegreenmesh 35
+place 35 on PROCESSOREXIT4 
+ti 337.5101
+place 35 on QUEUE3 
+place 37 on PROCESSOR4 
+place 35 on PROCESSOR6 
+ti 337.9967
+destroy 35
+create smallshapegreenmesh 35
+place 35 on PROCESSOREXIT6 
+ti 338.4967
+place 35 on QUEUE4 
+destroy 35
+ti 343.4927
+destroy 34
+create bigshapebluemesh 34
+place 34 on PROCESSOREXIT5 
+ti 343.9927
+place 34 on QUEUE4 
+destroy 34
+ti 350.0487
+destroy 37
+create shapegreenmesh 37
+place 37 on PROCESSOREXIT4 
+ti 350.5487
+place 37 on QUEUE3 
+place 36 on PROCESSOR4 
+place 37 on PROCESSOR6 
+ti 350.7102
+destroy 36
+create shaperedmesh 36
+place 36 on PROCESSOREXIT4 
+ti 351.2102
+place 36 on QUEUE3 
+place 36 on PROCESSOR5 
+ti 351.3552
+destroy 36
+create bigshaperedmesh 36
+place 36 on PROCESSOREXIT5 
+ti 351.8552
+place 36 on QUEUE4 
+destroy 36
+ti 361.4468
+destroy 37
+create smallshapegreenmesh 37
+place 37 on PROCESSOREXIT6 
+ti 361.9468
+place 37 on QUEUE4 
+destroy 37
+ti 370.0366
+create mesh 38
+place 38 on QUEUE1 
+place 38 on PROCESSOR3 
+ti 370.9825
+create mesh 39
+place 39 on QUEUE1 
+place 39 on PROCESSOR1 
+ti 370.9915
+destroy 38
+create bluemesh 38
+place 38 on PROCESSOREXIT3 
+ti 371.4915
+place 38 on QUEUE2 
+place 38 on PROCESSOR4 
+ti 376.9712
+destroy 38
+create shapebluemesh 38
+place 38 on PROCESSOREXIT4 
+ti 377.4712
+place 38 on QUEUE3 
+place 38 on PROCESSOR5 
+ti 380.4428
+destroy 38
+create bigshapebluemesh 38
+place 38 on PROCESSOREXIT5 
+ti 380.9428
+place 38 on QUEUE4 
+destroy 38
+ti 381.8827
+destroy 39
+create redmesh 39
+place 39 on PROCESSOREXIT1 
+ti 382.3827
+place 39 on QUEUE2 
+place 39 on PROCESSOR4 
+ti 383.4317
+create mesh 40
+place 40 on QUEUE1 
+place 40 on PROCESSOR2 
+ti 383.7143
+destroy 39
+create shaperedmesh 39
+place 39 on PROCESSOREXIT4 
+ti 384.2143
+place 39 on QUEUE3 
+place 39 on PROCESSOR6 
+ti 385.4471
+destroy 40
+create greenmesh 40
+place 40 on PROCESSOREXIT2 
+ti 385.9471
+place 40 on QUEUE2 
+place 40 on PROCESSOR4 
+ti 387.8122
+destroy 40
+create shapegreenmesh 40
+place 40 on PROCESSOREXIT4 
+ti 388.3122
+place 40 on QUEUE3 
+place 40 on PROCESSOR5 
+ti 392.0900
+destroy 40
+create bigshapegreenmesh 40
+place 40 on PROCESSOREXIT5 
+ti 392.1851
+destroy 39
+create smallshaperedmesh 39
+place 39 on PROCESSOREXIT6 
+ti 392.5900
+place 40 on QUEUE4 
+destroy 40
+ti 392.6851
+place 39 on QUEUE4 
+destroy 39
+ti 402.9099
+create mesh 41
+place 41 on QUEUE1 
+place 41 on PROCESSOR1 
+ti 404.1811
+create mesh 42
+place 42 on QUEUE1 
+place 42 on PROCESSOR2 
+ti 405.7711
+destroy 42
+create greenmesh 42
+place 42 on PROCESSOREXIT2 
+ti 406.2711
+place 42 on QUEUE2 
+place 42 on PROCESSOR4 
+ti 408.5011
+create mesh 43
+place 43 on QUEUE1 
+place 43 on PROCESSOR3 
+ti 409.4490
+create mesh 44
+place 44 on QUEUE1 
+place 44 on PROCESSOR2 
+ti 409.9463
+destroy 44
+create greenmesh 44
+place 44 on PROCESSOREXIT2 
+ti 410.4463
+place 44 on QUEUE2 
+ti 411.5303
+create mesh 45
+place 45 on QUEUE1 
+ti 412.6395
+destroy 43
+create bluemesh 43
+place 43 on PROCESSOREXIT3 
+ti 412.8443
+destroy 42
+create shapegreenmesh 42
+place 42 on PROCESSOREXIT4 
+ti 413.1395
+place 43 on QUEUE2 
+place 45 on PROCESSOR3 
+ti 413.3443
+place 42 on QUEUE3 
+place 44 on PROCESSOR4 
+place 42 on PROCESSOR6 
+ti 416.2311
+destroy 42
+create smallshapegreenmesh 42
+place 42 on PROCESSOREXIT6 
+ti 416.7178
+destroy 45
+create bluemesh 45
+place 45 on PROCESSOREXIT3 
+ti 416.7311
+place 42 on QUEUE4 
+destroy 42
+ti 417.2178
+place 45 on QUEUE2 
+ti 417.5320
+destroy 44
+create shapegreenmesh 44
+place 44 on PROCESSOREXIT4 
+ti 417.8491
+create mesh 46
+place 46 on QUEUE1 
+ti 417.9716
+create mesh 47
+place 47 on QUEUE1 
+ti 418.0320
+place 44 on QUEUE3 
+place 43 on PROCESSOR4 
+place 44 on PROCESSOR5 
+ti 419.2119
+destroy 44
+create bigshapegreenmesh 44
+place 44 on PROCESSOREXIT5 
+ti 419.6109
+destroy 43
+create shapebluemesh 43
+place 43 on PROCESSOREXIT4 
+ti 419.7119
+place 44 on QUEUE4 
+destroy 44
+ti 420.1109
+place 43 on QUEUE3 
+place 45 on PROCESSOR4 
+place 43 on PROCESSOR6 
+ti 423.8586
+destroy 43
+create smallshapebluemesh 43
+place 43 on PROCESSOREXIT6 
+ti 424.1338
+destroy 45
+create shapebluemesh 45
+place 45 on PROCESSOREXIT4 
+ti 424.3586
+place 43 on QUEUE4 
+destroy 43
+ti 424.6338
+place 45 on QUEUE3 
+place 45 on PROCESSOR5 
+ti 429.4741
+create mesh 48
+place 48 on QUEUE1 
+ti 432.9635
+destroy 41
+create redmesh 41
+place 41 on PROCESSOREXIT1 
+ti 433.4635
+place 41 on QUEUE2 
+place 46 on PROCESSOR1 
+place 47 on PROCESSOR2 
+place 48 on PROCESSOR3 
+place 41 on PROCESSOR4 
+ti 434.8964
+destroy 46
+create redmesh 46
+place 46 on PROCESSOREXIT1 
+ti 435.3964
+place 46 on QUEUE2 
+ti 436.5856
+create mesh 49
+place 49 on QUEUE1 
+place 49 on PROCESSOR1 
+ti 436.6763
+destroy 41
+create shaperedmesh 41
+place 41 on PROCESSOREXIT4 
+ti 437.1763
+place 41 on QUEUE3 
+place 46 on PROCESSOR4 
+place 41 on PROCESSOR6 
+ti 438.4299
+destroy 41
+create smallshaperedmesh 41
+place 41 on PROCESSOREXIT6 
+ti 438.9299
+place 41 on QUEUE4 
+destroy 41
+ti 439.0390
+destroy 49
+create redmesh 49
+place 49 on PROCESSOREXIT1 
+ti 439.5390
+place 49 on QUEUE2 
+ti 439.6398
+destroy 47
+create greenmesh 47
+place 47 on PROCESSOREXIT2 
+ti 440.1270
+destroy 48
+create bluemesh 48
+place 48 on PROCESSOREXIT3 
+ti 440.1398
+place 47 on QUEUE2 
+ti 440.6270
+place 48 on QUEUE2 
+ti 443.2523
+create mesh 50
+place 50 on QUEUE1 
+place 50 on PROCESSOR2 
+ti 444.4656
+destroy 45
+create bigshapebluemesh 45
+place 45 on PROCESSOREXIT5 
+ti 444.9656
+place 45 on QUEUE4 
+destroy 45
+ti 456.8411
+destroy 46
+create shaperedmesh 46
+place 46 on PROCESSOREXIT4 
+ti 457.3411
+place 46 on QUEUE3 
+place 49 on PROCESSOR4 
+place 46 on PROCESSOR5 
+ti 459.3339
+destroy 46
+create bigshaperedmesh 46
+place 46 on PROCESSOREXIT5 
+ti 459.8339
+place 46 on QUEUE4 
+destroy 46
+ti 467.5508
+destroy 49
+create shaperedmesh 49
+place 49 on PROCESSOREXIT4 
+ti 468.0508
+place 49 on QUEUE3 
+place 47 on PROCESSOR4 
+place 49 on PROCESSOR6 
+ti 468.6786
+destroy 49
+create smallshaperedmesh 49
+place 49 on PROCESSOREXIT6 
+ti 468.7070
+destroy 50
+create greenmesh 50
+place 50 on PROCESSOREXIT2 
+ti 469.1786
+place 49 on QUEUE4 
+destroy 49
+ti 469.2070
+place 50 on QUEUE2 
+ti 469.4662
+destroy 47
+create shapegreenmesh 47
+place 47 on PROCESSOREXIT4 
+ti 469.9662
+place 47 on QUEUE3 
+place 48 on PROCESSOR4 
+place 47 on PROCESSOR6 
+ti 472.2672
+destroy 48
+create shapebluemesh 48
+place 48 on PROCESSOREXIT4 
+ti 472.7672
+place 48 on QUEUE3 
+place 50 on PROCESSOR4 
+place 48 on PROCESSOR5 
+ti 474.5950
+create mesh 51
+place 51 on QUEUE1 
+place 51 on PROCESSOR2 
+ti 475.3179
+destroy 50
+create shapegreenmesh 50
+place 50 on PROCESSOREXIT4 
+ti 475.3848
+destroy 48
+create bigshapebluemesh 48
+place 48 on PROCESSOREXIT5 
+ti 475.8179
+place 50 on QUEUE3 
+ti 475.8848
+place 48 on QUEUE4 
+destroy 48
+ti 476.2025
+destroy 47
+create smallshapegreenmesh 47
+place 47 on PROCESSOREXIT6 
+ti 476.7025
+place 47 on QUEUE4 
+destroy 47
+place 50 on PROCESSOR6 
+ti 479.8969
+destroy 51
+create greenmesh 51
+place 51 on PROCESSOREXIT2 
+ti 480.3969
+place 51 on QUEUE2 
+place 51 on PROCESSOR4 
+ti 485.8522
+destroy 51
+create shapegreenmesh 51
+place 51 on PROCESSOREXIT4 
+ti 486.3522
+place 51 on QUEUE3 
+place 51 on PROCESSOR5 
+ti 490.1203
+destroy 50
+create smallshapegreenmesh 50
+place 50 on PROCESSOREXIT6 
+ti 490.6203
+place 50 on QUEUE4 
+destroy 50
+ti 493.3386
+destroy 51
+create bigshapegreenmesh 51
+place 51 on PROCESSOREXIT5 
+ti 493.8386
+place 51 on QUEUE4 
+destroy 51
+ti 497.5669
+create mesh 52
+place 52 on QUEUE1 
+place 52 on PROCESSOR2 
